@@ -1,0 +1,610 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E59B4FA31B55FBA5005A2E7B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E59B4FA21B55FBA5005A2E7B /* AppDelegate.m */; };
+		E59B4FA51B55FBA5005A2E7B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E59B4FA41B55FBA5005A2E7B /* main.m */; };
+		E59B4FA71B55FBA5005A2E7B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E59B4FA61B55FBA5005A2E7B /* Images.xcassets */; };
+		E59B4FAA1B55FBA5005A2E7B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E59B4FA81B55FBA5005A2E7B /* MainMenu.xib */; };
+		E59B4FB61B55FBA5005A2E7B /* XcodeLogger_OSX_SampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E59B4FB51B55FBA5005A2E7B /* XcodeLogger_OSX_SampleTests.m */; };
+		E59B4FD01B55FCF2005A2E7B /* XLPerformanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E59B4FCF1B55FCF2005A2E7B /* XLPerformanceTests.m */; };
+		E59B4FD61B55FD09005A2E7B /* XcodeLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E59B4FD21B55FD09005A2E7B /* XcodeLogger.m */; };
+		E59B4FD71B55FD09005A2E7B /* XLogObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E59B4FD41B55FD09005A2E7B /* XLogObject.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E59B4FB01B55FBA5005A2E7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E59B4F941B55FBA5005A2E7B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E59B4F9B1B55FBA5005A2E7B;
+			remoteInfo = "XcodeLogger-OSX-Sample";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E59B4F9C1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "XcodeLogger-OSX-Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E59B4FA01B55FBA5005A2E7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E59B4FA11B55FBA5005A2E7B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E59B4FA21B55FBA5005A2E7B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E59B4FA41B55FBA5005A2E7B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E59B4FA61B55FBA5005A2E7B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		E59B4FA91B55FBA5005A2E7B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E59B4FAF1B55FBA5005A2E7B /* XcodeLogger-OSX-SampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "XcodeLogger-OSX-SampleTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E59B4FB41B55FBA5005A2E7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E59B4FB51B55FBA5005A2E7B /* XcodeLogger_OSX_SampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XcodeLogger_OSX_SampleTests.m; sourceTree = "<group>"; };
+		E59B4FCE1B55FCF2005A2E7B /* XLPerformanceTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XLPerformanceTests.h; path = "../../Xcode Logger/Performance Tests Class/XLPerformanceTests.h"; sourceTree = "<group>"; };
+		E59B4FCF1B55FCF2005A2E7B /* XLPerformanceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XLPerformanceTests.m; path = "../../Xcode Logger/Performance Tests Class/XLPerformanceTests.m"; sourceTree = "<group>"; };
+		E59B4FD11B55FD09005A2E7B /* XcodeLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XcodeLogger.h; path = "../../Xcode Logger/Main Library/XcodeLogger.h"; sourceTree = "<group>"; };
+		E59B4FD21B55FD09005A2E7B /* XcodeLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XcodeLogger.m; path = "../../Xcode Logger/Main Library/XcodeLogger.m"; sourceTree = "<group>"; };
+		E59B4FD31B55FD09005A2E7B /* XLogObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XLogObject.h; path = "../../Xcode Logger/Main Library/XLogObject.h"; sourceTree = "<group>"; };
+		E59B4FD41B55FD09005A2E7B /* XLogObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XLogObject.m; path = "../../Xcode Logger/Main Library/XLogObject.m"; sourceTree = "<group>"; };
+		E59B4FD51B55FD09005A2E7B /* XLogTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XLogTypes.h; path = "../../Xcode Logger/Main Library/XLogTypes.h"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E59B4F991B55FBA5005A2E7B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E59B4FAC1B55FBA5005A2E7B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E59B4F931B55FBA5005A2E7B = {
+			isa = PBXGroup;
+			children = (
+				E59B4F9E1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample */,
+				E59B4FB21B55FBA5005A2E7B /* XcodeLogger-OSX-SampleTests */,
+				E59B4F9D1B55FBA5005A2E7B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E59B4F9D1B55FBA5005A2E7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4F9C1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample.app */,
+				E59B4FAF1B55FBA5005A2E7B /* XcodeLogger-OSX-SampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E59B4F9E1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FC11B55FBC9005A2E7B /* Xcode Logger Library */,
+				E59B4FC01B55FBB5005A2E7B /* Life Cycle */,
+				E59B4FBF1B55FBAE005A2E7B /* UI */,
+				E59B4F9F1B55FBA5005A2E7B /* Supporting Files */,
+			);
+			path = "XcodeLogger-OSX-Sample";
+			sourceTree = "<group>";
+		};
+		E59B4F9F1B55FBA5005A2E7B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FA01B55FBA5005A2E7B /* Info.plist */,
+				E59B4FA41B55FBA5005A2E7B /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E59B4FB21B55FBA5005A2E7B /* XcodeLogger-OSX-SampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FB51B55FBA5005A2E7B /* XcodeLogger_OSX_SampleTests.m */,
+				E59B4FB31B55FBA5005A2E7B /* Supporting Files */,
+			);
+			path = "XcodeLogger-OSX-SampleTests";
+			sourceTree = "<group>";
+		};
+		E59B4FB31B55FBA5005A2E7B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FB41B55FBA5005A2E7B /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E59B4FBF1B55FBAE005A2E7B /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FA61B55FBA5005A2E7B /* Images.xcassets */,
+				E59B4FA81B55FBA5005A2E7B /* MainMenu.xib */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		E59B4FC01B55FBB5005A2E7B /* Life Cycle */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FA11B55FBA5005A2E7B /* AppDelegate.h */,
+				E59B4FA21B55FBA5005A2E7B /* AppDelegate.m */,
+			);
+			name = "Life Cycle";
+			sourceTree = "<group>";
+		};
+		E59B4FC11B55FBC9005A2E7B /* Xcode Logger Library */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FC21B55FBD5005A2E7B /* Main */,
+				E59B4FC31B55FBDB005A2E7B /* Performance Tests Class */,
+			);
+			name = "Xcode Logger Library";
+			sourceTree = "<group>";
+		};
+		E59B4FC21B55FBD5005A2E7B /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FD51B55FD09005A2E7B /* XLogTypes.h */,
+				E59B4FD31B55FD09005A2E7B /* XLogObject.h */,
+				E59B4FD41B55FD09005A2E7B /* XLogObject.m */,
+				E59B4FD11B55FD09005A2E7B /* XcodeLogger.h */,
+				E59B4FD21B55FD09005A2E7B /* XcodeLogger.m */,
+			);
+			name = Main;
+			sourceTree = "<group>";
+		};
+		E59B4FC31B55FBDB005A2E7B /* Performance Tests Class */ = {
+			isa = PBXGroup;
+			children = (
+				E59B4FCE1B55FCF2005A2E7B /* XLPerformanceTests.h */,
+				E59B4FCF1B55FCF2005A2E7B /* XLPerformanceTests.m */,
+			);
+			name = "Performance Tests Class";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E59B4F9B1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E59B4FB91B55FBA5005A2E7B /* Build configuration list for PBXNativeTarget "XcodeLogger-OSX-Sample" */;
+			buildPhases = (
+				E59B4F981B55FBA5005A2E7B /* Sources */,
+				E59B4F991B55FBA5005A2E7B /* Frameworks */,
+				E59B4F9A1B55FBA5005A2E7B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "XcodeLogger-OSX-Sample";
+			productName = "XcodeLogger-OSX-Sample";
+			productReference = E59B4F9C1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E59B4FAE1B55FBA5005A2E7B /* XcodeLogger-OSX-SampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E59B4FBC1B55FBA5005A2E7B /* Build configuration list for PBXNativeTarget "XcodeLogger-OSX-SampleTests" */;
+			buildPhases = (
+				E59B4FAB1B55FBA5005A2E7B /* Sources */,
+				E59B4FAC1B55FBA5005A2E7B /* Frameworks */,
+				E59B4FAD1B55FBA5005A2E7B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E59B4FB11B55FBA5005A2E7B /* PBXTargetDependency */,
+			);
+			name = "XcodeLogger-OSX-SampleTests";
+			productName = "XcodeLogger-OSX-SampleTests";
+			productReference = E59B4FAF1B55FBA5005A2E7B /* XcodeLogger-OSX-SampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E59B4F941B55FBA5005A2E7B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Codebringers Software";
+				TargetAttributes = {
+					E59B4F9B1B55FBA5005A2E7B = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					E59B4FAE1B55FBA5005A2E7B = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = E59B4F9B1B55FBA5005A2E7B;
+					};
+				};
+			};
+			buildConfigurationList = E59B4F971B55FBA5005A2E7B /* Build configuration list for PBXProject "XcodeLogger-OSX-Sample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E59B4F931B55FBA5005A2E7B;
+			productRefGroup = E59B4F9D1B55FBA5005A2E7B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E59B4F9B1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample */,
+				E59B4FAE1B55FBA5005A2E7B /* XcodeLogger-OSX-SampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E59B4F9A1B55FBA5005A2E7B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E59B4FA71B55FBA5005A2E7B /* Images.xcassets in Resources */,
+				E59B4FAA1B55FBA5005A2E7B /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E59B4FAD1B55FBA5005A2E7B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E59B4F981B55FBA5005A2E7B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E59B4FD71B55FD09005A2E7B /* XLogObject.m in Sources */,
+				E59B4FA51B55FBA5005A2E7B /* main.m in Sources */,
+				E59B4FD01B55FCF2005A2E7B /* XLPerformanceTests.m in Sources */,
+				E59B4FA31B55FBA5005A2E7B /* AppDelegate.m in Sources */,
+				E59B4FD61B55FD09005A2E7B /* XcodeLogger.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E59B4FAB1B55FBA5005A2E7B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E59B4FB61B55FBA5005A2E7B /* XcodeLogger_OSX_SampleTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E59B4FB11B55FBA5005A2E7B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E59B4F9B1B55FBA5005A2E7B /* XcodeLogger-OSX-Sample */;
+			targetProxy = E59B4FB01B55FBA5005A2E7B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E59B4FA81B55FBA5005A2E7B /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E59B4FA91B55FBA5005A2E7B /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E59B4FB71B55FBA5005A2E7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E59B4FB81B55FBA5005A2E7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E59B4FBA1B55FBA5005A2E7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "XcodeLogger-OSX-Sample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E59B4FBB1B55FBA5005A2E7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "XcodeLogger-OSX-Sample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		E59B4FBD1B55FBA5005A2E7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "XcodeLogger-OSX-SampleTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XcodeLogger-OSX-Sample.app/Contents/MacOS/XcodeLogger-OSX-Sample";
+			};
+			name = Debug;
+		};
+		E59B4FBE1B55FBA5005A2E7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "XcodeLogger-OSX-SampleTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XcodeLogger-OSX-Sample.app/Contents/MacOS/XcodeLogger-OSX-Sample";
+			};
+			name = Release;
+		};
+		E59B4FD81B55FDDC005A2E7B /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Development;
+		};
+		E59B4FD91B55FDDC005A2E7B /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "XcodeLogger-OSX-Sample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Development;
+		};
+		E59B4FDA1B55FDDC005A2E7B /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "XcodeLogger-OSX-SampleTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XcodeLogger-OSX-Sample.app/Contents/MacOS/XcodeLogger-OSX-Sample";
+			};
+			name = Development;
+		};
+		E59B4FDB1B55FDED005A2E7B /* Online Services */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = "Online Services";
+		};
+		E59B4FDC1B55FDED005A2E7B /* Online Services */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "XcodeLogger-OSX-Sample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Online Services";
+		};
+		E59B4FDD1B55FDED005A2E7B /* Online Services */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "XcodeLogger-OSX-SampleTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XcodeLogger-OSX-Sample.app/Contents/MacOS/XcodeLogger-OSX-Sample";
+			};
+			name = "Online Services";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E59B4F971B55FBA5005A2E7B /* Build configuration list for PBXProject "XcodeLogger-OSX-Sample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E59B4FB71B55FBA5005A2E7B /* Debug */,
+				E59B4FB81B55FBA5005A2E7B /* Release */,
+				E59B4FD81B55FDDC005A2E7B /* Development */,
+				E59B4FDB1B55FDED005A2E7B /* Online Services */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E59B4FB91B55FBA5005A2E7B /* Build configuration list for PBXNativeTarget "XcodeLogger-OSX-Sample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E59B4FBA1B55FBA5005A2E7B /* Debug */,
+				E59B4FBB1B55FBA5005A2E7B /* Release */,
+				E59B4FD91B55FDDC005A2E7B /* Development */,
+				E59B4FDC1B55FDED005A2E7B /* Online Services */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E59B4FBC1B55FBA5005A2E7B /* Build configuration list for PBXNativeTarget "XcodeLogger-OSX-SampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E59B4FBD1B55FBA5005A2E7B /* Debug */,
+				E59B4FBE1B55FBA5005A2E7B /* Release */,
+				E59B4FDA1B55FDDC005A2E7B /* Development */,
+				E59B4FDD1B55FDED005A2E7B /* Online Services */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E59B4F941B55FBA5005A2E7B /* Project object */;
+}

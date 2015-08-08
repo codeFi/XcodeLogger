@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>AD24E659-D907-4AED-8F1F-B8683BF44924</string>
+	<key>IDESourceControlProjectName</key>
+	<string>XcodeLogger-OSX-Sample</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>ACCA0477A34AD8C6DADC246BAC6E2796C630E485</key>
+		<string>https://github.com/codeFi/XcodeLogger.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>XcodeLogger-OSX-Sample/XcodeLogger-OSX-Sample.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>ACCA0477A34AD8C6DADC246BAC6E2796C630E485</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/codeFi/XcodeLogger.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>ACCA0477A34AD8C6DADC246BAC6E2796C630E485</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>ACCA0477A34AD8C6DADC246BAC6E2796C630E485</string>
+			<key>IDESourceControlWCCName</key>
+			<string>XcodeLogger</string>
+		</dict>
+	</array>
+</dict>
+</plist>

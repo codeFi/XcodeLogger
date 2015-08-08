@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "0640"
+   version = "1.7">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <PreActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Run Script"
+               scriptText = "/usr/libexec/PlistBuddy -c &quot;Set :XLRunningScheme \&quot;$SCHEME_NAME\&quot;&quot; &quot;$PROJECT_DIR/$INFOPLIST_FILE&quot;">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "E59B4F521B55F554005A2E7B"
+                     BuildableName = "XcodeLogger-iOS-Sample.app"
+                     BlueprintName = "XcodeLogger-iOS-Sample"
+                     ReferencedContainer = "container:XcodeLogger-iOS-Sample.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PreActions>
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E59B4F521B55F554005A2E7B"
+               BuildableName = "XcodeLogger-iOS-Sample.app"
+               BlueprintName = "XcodeLogger-iOS-Sample"
+               ReferencedContainer = "container:XcodeLogger-iOS-Sample.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E59B4F6B1B55F554005A2E7B"
+               BuildableName = "XcodeLogger-iOS-SampleTests.xctest"
+               BlueprintName = "XcodeLogger-iOS-SampleTests"
+               ReferencedContainer = "container:XcodeLogger-iOS-Sample.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      buildConfiguration = "Release">
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E59B4F6B1B55F554005A2E7B"
+               BuildableName = "XcodeLogger-iOS-SampleTests.xctest"
+               BlueprintName = "XcodeLogger-iOS-SampleTests"
+               ReferencedContainer = "container:XcodeLogger-iOS-Sample.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E59B4F521B55F554005A2E7B"
+            BuildableName = "XcodeLogger-iOS-Sample.app"
+            BlueprintName = "XcodeLogger-iOS-Sample"
+            ReferencedContainer = "container:XcodeLogger-iOS-Sample.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </TestAction>
+   <LaunchAction
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      buildConfiguration = "Release"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E59B4F521B55F554005A2E7B"
+            BuildableName = "XcodeLogger-iOS-Sample.app"
+            BlueprintName = "XcodeLogger-iOS-Sample"
+            ReferencedContainer = "container:XcodeLogger-iOS-Sample.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "XcodeColors"
+            value = "YES"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      buildConfiguration = "Release"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E59B4F521B55F554005A2E7B"
+            BuildableName = "XcodeLogger-iOS-Sample.app"
+            BlueprintName = "XcodeLogger-iOS-Sample"
+            ReferencedContainer = "container:XcodeLogger-iOS-Sample.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Release">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>
