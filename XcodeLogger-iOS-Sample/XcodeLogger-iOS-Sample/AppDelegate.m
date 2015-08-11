@@ -37,8 +37,8 @@
     [xManager setBuildSchemeName:@"xl debug"
                      forXLogType:XLOGGER_TYPE_DEBUG];
     
-    //[xManager setBuildSchemeName:@"xl development"
-    //                 forXLogType:XLOGGER_TYPE_DEVELOPMENT];
+    [xManager setBuildSchemeName:@"xl development"
+                     forXLogType:XLOGGER_TYPE_DEVELOPMENT];
     
     [xManager setBuildSchemeName:@"xl online"
                      forXLogType:XLOGGER_TYPE_ONLINE_SERVICES];
