@@ -24,8 +24,9 @@
     // to the newest version containing the latest Xcode's UDID or do it
     // yourself: https://github.com/robbiehanson/XcodeColors/wiki/XcodeUpdates
     
-    // If you encounter any issues with Xcode Colors, comment the line below.
-    setenv("XcodeColors", "YES", 0);
+    // If you encounter any issues with Xcode Colors,
+    // comment the line below or set the variable to NO.
+    setenv("XcodeColors", "NO", 0);
     
     //grab a reference to Xcode Logger singleton instance
     XcodeLogger *xManager = [XcodeLogger sharedManager];
