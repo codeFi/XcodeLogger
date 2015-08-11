@@ -4,14 +4,13 @@
 //
 //  Created by Razvan Alin Tanase on 15/07/15.
 //  Copyright (c) 2015 Codebringers Software. All rights reserved.
-//
+
 
 #import "AppDelegate.h"
 #import "XcodeLogger.h"
 #import "XLPerformanceTests.h"
 
 @interface AppDelegate ()
-
 @end
 
 @implementation AppDelegate
@@ -19,21 +18,31 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    //grab a hold of it
+    // Required for iOS Projects to enable the Xcode Colors plugin.
+    // If the plugin is not installed, the output will contain the colors escape strings.
+    // If the plugin is installed but not loaded, either update the plugin
+    // to the newest version containing the latest Xcode's UDID or do it
+    // yourself: https://github.com/robbiehanson/XcodeColors/wiki/XcodeUpdates
+    
+    // If you encounter any issues with Xcode Colors, comment the line below.
+    setenv("XcodeColors", "YES", 0);
+    
+    //grab a reference to Xcode Logger singleton instance
     XcodeLogger *xManager = [XcodeLogger sharedManager];
     
     //check Info.plist to see why
     [xManager setInfoPlistKeyNameForRunningSchemes:@"XLRunningScheme"];
     
-    //linking..
+    //scheme linking - case insensitive
     [xManager setBuildSchemeName:@"xl debug"
                      forXLogType:XLOGGER_TYPE_DEBUG];
     
-    [xManager setBuildSchemeName:@"xl development"
-                     forXLogType:XLOGGER_TYPE_DEVELOPMENT];
+    //[xManager setBuildSchemeName:@"xl development"
+    //                 forXLogType:XLOGGER_TYPE_DEVELOPMENT];
     
     [xManager setBuildSchemeName:@"xl online"
                      forXLogType:XLOGGER_TYPE_ONLINE_SERVICES];
+    
     
     
     //XLog - the 1:1 replacement for NSLog
@@ -86,7 +95,8 @@
     OLog_WARNING(@"OLOG_WARNING");
     OLog_ERROR(@"OLOG_ERROR");
     
-    //Let's make some performance tests..
+    
+    //let's make some performance tests
     [XLPerformanceTests startPerformanceTestWithNumberOfRuns:5
                                           numberOfIterations:5000];
     

@@ -37,6 +37,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>XLRunningScheme</key>
-	<string>XL RELEASE</string>
+	<string>XL DEBUG</string>
 </dict>
 </plist>

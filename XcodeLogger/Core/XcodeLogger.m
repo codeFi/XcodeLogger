@@ -2,9 +2,30 @@
 //  XcodeLogger.m
 //  XcodeLogger
 //
-//  Created by Razvan Alin Tanase on 02/07/15.
-//  Copyright (c) 2015 Codebringers Software. All rights reserved.
-//
+/*  
+*  Created by Razvan Alin Tanase on 02/07/15.
+*  Copyright (c) 2015 Codebringers Software. All rights reserved.
+*
+*  Permission is hereby granted, free of charge, to any person obtaining a copy
+*  of this software and associated documentation files (the "Software"), to deal
+*  in the Software without restriction, including without limitation the rights
+*  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the Software is
+*  furnished to do so, subject to the following conditions:
+*
+*  The above copyright notice and this permission notice shall be included in
+*  all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+*  THE SOFTWARE.
+*
+*/// Project's Source: https://github.com/codeFi/XcodeLogger
+
 
 #import "XcodeLogger.h"
 #import "XLogObject.h"
@@ -249,9 +270,15 @@ static BOOL COLORS_ENABLED  = YES;
 }
 
 #pragma mark - Private Helpers
-+ (BOOL)isXcodeColorsPluginEnabled {
-    char *xcode_colors = getenv("XcodeColors");
-    return xcode_colors && (strcmp(xcode_colors, "YES") == 0);
++ (BOOL)xcodeColorsPluginIsEnabled {
+    static NSString *xcEnabledString;
+    
+    if (!xcEnabledString) {
+        char *xcode_colors = getenv("XcodeColors");
+        xcEnabledString = xcode_colors && (strcmp(xcode_colors, "YES") == 0) ? @"YES":@"NO";
+    }
+
+    return [xcEnabledString boolValue];
 }
 
 + (BOOL)currentRunningSchemeMatches:(NSString *)paramBuildScheme
@@ -545,7 +572,7 @@ static bool isFirstAccess = YES;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         isFirstAccess = NO;
-        XCOLORS_ENABLED = [self isXcodeColorsPluginEnabled];
+        XCOLORS_ENABLED = [self xcodeColorsPluginIsEnabled];
         _sharedInstance = [[super allocWithZone:NULL] init];
     });
     
@@ -863,10 +890,10 @@ void  func_XLog_Output(XLOGGER_TYPE  paramXLogType,
                 
                 switch (paramXLogType) {
                     case XLOGGER_TYPE_DEBUG:
-                        error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <%@>!\n<DLog> & <DDLog> are disabled for the currently running scheme!\nSet one using \"-[setBuildSchemeName:forXLogType:]\"", currentLogger.type];
+                        error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <DLog>!\nSet one using \"-[setBuildSchemeName:forXLogType:]\""];
                         break;
                     case XLOGGER_TYPE_DEVELOPMENT:
-                        error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <%@>\n*DVLog* & *DDLog* are disabled for the currently running scheme!\nSet one using \"-[setBuildSchemeName:forXLogType:]\"", currentLogger.type];
+                        error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <DVLog>!\nSet one using \"-[setBuildSchemeName:forXLogType:]\""];
                         break;
                     default:
                         error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <%@>! Set one using \"-[setBuildSchemeName:forXLogType:]\"", currentLogger.type];
@@ -884,13 +911,15 @@ void  func_XLog_Output(XLOGGER_TYPE  paramXLogType,
         
         if (outputAllowed) {
             
+            setHeaderArguments(callee,calleeMethod,fileName,lineNumber);
+
             va_list args;
             va_start(args, inputBody);
             
-            setHeaderArguments(callee,calleeMethod,fileName,lineNumber);
-            
             XLOG_OUTPUT_STRING = [[NSString alloc] initWithFormat:inputBody arguments:args];
             
+            va_end(args);
+
             NSString *header   = [XcodeLogger populateFormatString:currentLogger.headerFormat
                                                      withArguments:currentLogger.headerArguments];
             
@@ -905,11 +934,7 @@ void  func_XLog_Output(XLOGGER_TYPE  paramXLogType,
             }
             
             XLOG_OUTPUT_STRING = [XLOG_OUTPUT_STRING stringByAppendingString:currentLogger.newlinesAfterOutput];
-            
             [[NSFileHandle fileHandleWithStandardOutput] writeData: [XLOG_OUTPUT_STRING dataUsingEncoding: NSUTF8StringEncoding]];
-            
-            va_end(args);
-            
         }
     }
 }

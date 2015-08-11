@@ -2,11 +2,35 @@
 //  XLogObject.m
 //  XcodeLogger
 //
-//  Created by Razvan Alin Tanase on 13/07/15.
-//  Copyright (c) 2015 Codebringers Software. All rights reserved.
-//
+/*  
+*  Created by Razvan Alin Tanase on 13/07/15.
+*  Copyright (c) 2015 Codebringers Software. All rights reserved.
+*
+*  Permission is hereby granted, free of charge, to any person obtaining a copy
+*  of this software and associated documentation files (the "Software"), to deal
+*  in the Software without restriction, including without limitation the rights
+*  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the Software is
+*  furnished to do so, subject to the following conditions:
+*
+*  The above copyright notice and this permission notice shall be included in
+*  all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+*  THE SOFTWARE.
+*
+*/// Project's Source: https://github.com/codeFi/XcodeLogger
 
 #import "XLogObject.h"
+
+#define XLogType_Key(x)  [NSNumber numberWithUnsignedInt:x]
+#define XLogLevel_Key(x) [NSNumber numberWithUnsignedInt:x]
+
 
 static NSString *const DEFAULT_HEADER_FORMAT             = @"(%@)=> [>%@<]:%@:[#%@]:[> %@ <]";
 static NSString *const DEFAULT_HEADER_FORMAT_SCHEME_LOGS = @"[%@](%@)=> [>%@<]:%@:[#%@]:[> %@ <]";
@@ -25,7 +49,7 @@ static NSString *const DEFAULT_BGRD_COLOR_WARNING_LEVEL = @"bg255,255,0;";
 static NSString *const DEFAULT_TEXT_COLOR_ERROR_LEVEL = @"fg255,255,255;";
 static NSString *const DEFAULT_BGRD_COLOR_ERROR_LEVEL = @"bg255,0,0;";
 
-static NSString *const DEFAULT_STATUS_TEXT_COLOR_WARNING = @"fg255,98,0;";
+static NSString *const DEFAULT_STATUS_TEXT_COLOR_WARNING = @"bg255,98,0;";
 
 static NSString *const STATUS_DLOG_SIMPLE    = @"DEBUG";
 static NSString *const STATUS_DLOG_INFO      = @"DEBUG:INFO";
@@ -51,6 +75,7 @@ static NSString *const STATUS_OLOG_HIGHLIGHT = @"ONLINE:STATUS";
 static NSString *const STATUS_OLOG_WARNING   = @"ONLINE:WARNING";
 static NSString *const STATUS_OLOG_ERROR     = @"ONLINE:ERROR";
 
+static NSString *const key_Status_Color = @"status_color";
 
 @interface XLogObject ()
 {
@@ -91,8 +116,6 @@ static NSString *const STATUS_OLOG_ERROR     = @"ONLINE:ERROR";
         
         _outputColor = [self outputColorForLevel:paramLogLevel];
         
-        
-        
         switch (paramLogType) {
             case XLOGGER_TYPE_NSLOG:
             {
@@ -110,7 +133,7 @@ static NSString *const STATUS_OLOG_ERROR     = @"ONLINE:ERROR";
             {
                 if (paramLogLevel != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
                     _headerFormat    = DEFAULT_HEADER_FORMAT_SCHEME_LOGS;
-                    _headerArguments = @[[self logTypeStringForHeaderFromType:paramLogType
+                    _headerArguments = @[[self defaultStatusMessageForLogType:paramLogType
                                                                         level:paramLogLevel],
                                          XL_ARG_TIMESTAMP,
                                          XL_ARG_CALLEE_ADDRESS,
@@ -181,6 +204,69 @@ static NSString *const STATUS_OLOG_ERROR     = @"ONLINE:ERROR";
 }
 
 #pragma mark - Private Helpers
+
+- (NSDictionary *)getDefaultStatusInformations {
+    
+    static NSDictionary *defaultStatusInformations;
+    
+    if (!defaultStatusInformations) {
+        NSDictionary *logLevelsStatusColors;
+        logLevelsStatusColors = @{XLogLevel_Key(XLOGGER_LEVEL_INFORMATION):DEFAULT_BGRD_COLOR_INFO_LEVEL,
+                                  XLogLevel_Key(XLOGGER_LEVEL_HIGHLIGHT)  :DEFAULT_BGRD_COLOR_HIGHLIGHT_LEVEL,
+                                  XLogLevel_Key(XLOGGER_LEVEL_WARNING)    :DEFAULT_STATUS_TEXT_COLOR_WARNING,
+                                  XLogLevel_Key(XLOGGER_LEVEL_ERROR)      :DEFAULT_BGRD_COLOR_ERROR_LEVEL};
+        
+        NSDictionary *dLogLevelsStatusMessages;
+        dLogLevelsStatusMessages = @{XLogLevel_Key(XLOGGER_LEVEL_SIMPLE)     :STATUS_DLOG_SIMPLE,
+                                     XLogLevel_Key(XLOGGER_LEVEL_INFORMATION):STATUS_DLOG_INFO,
+                                     XLogLevel_Key(XLOGGER_LEVEL_HIGHLIGHT)  :STATUS_DLOG_HIGHLIGHT,
+                                     XLogLevel_Key(XLOGGER_LEVEL_WARNING)    :STATUS_DLOG_WARNING,
+                                     XLogLevel_Key(XLOGGER_LEVEL_ERROR)      :STATUS_DLOG_ERROR};
+        
+        NSDictionary *dvLogLevelsStatusMessages;
+        dvLogLevelsStatusMessages = @{XLogLevel_Key(XLOGGER_LEVEL_SIMPLE)     :STATUS_DVLOG_SIMPLE,
+                                      XLogLevel_Key(XLOGGER_LEVEL_INFORMATION):STATUS_DVLOG_INFO,
+                                      XLogLevel_Key(XLOGGER_LEVEL_HIGHLIGHT)  :STATUS_DVLOG_HIGHLIGHT,
+                                      XLogLevel_Key(XLOGGER_LEVEL_WARNING)    :STATUS_DVLOG_WARNING,
+                                      XLogLevel_Key(XLOGGER_LEVEL_ERROR)      :STATUS_DVLOG_ERROR};
+        
+        NSDictionary *ddLogLevelsStatusMessages;
+        ddLogLevelsStatusMessages = @{XLogLevel_Key(XLOGGER_LEVEL_SIMPLE)     :STATUS_DDLOG_SIMPLE,
+                                      XLogLevel_Key(XLOGGER_LEVEL_INFORMATION):STATUS_DDLOG_INFO,
+                                      XLogLevel_Key(XLOGGER_LEVEL_HIGHLIGHT)  :STATUS_DDLOG_HIGHLIGHT,
+                                      XLogLevel_Key(XLOGGER_LEVEL_WARNING)    :STATUS_DDLOG_WARNING,
+                                      XLogLevel_Key(XLOGGER_LEVEL_ERROR)      :STATUS_DDLOG_ERROR};
+        
+        NSDictionary *oLogLevelsStatusMessages;
+        oLogLevelsStatusMessages = @{XLogLevel_Key(XLOGGER_LEVEL_SIMPLE)     :STATUS_OLOG_SIMPLE,
+                                     XLogLevel_Key(XLOGGER_LEVEL_INFORMATION):STATUS_OLOG_INFO,
+                                     XLogLevel_Key(XLOGGER_LEVEL_HIGHLIGHT)  :STATUS_OLOG_HIGHLIGHT,
+                                     XLogLevel_Key(XLOGGER_LEVEL_WARNING)    :STATUS_OLOG_WARNING,
+                                     XLogLevel_Key(XLOGGER_LEVEL_ERROR)      :STATUS_OLOG_ERROR};
+        
+        defaultStatusInformations = @{key_Status_Color                            :logLevelsStatusColors,
+                                      XLogType_Key(XLOGGER_TYPE_DEBUG)            :dLogLevelsStatusMessages,
+                                      XLogType_Key(XLOGGER_TYPE_DEVELOPMENT)      :dvLogLevelsStatusMessages,
+                                      XLogType_Key(XLOGGER_TYPE_DEBUG_DEVELOPMENT):ddLogLevelsStatusMessages,
+                                      XLogType_Key(XLOGGER_TYPE_ONLINE_SERVICES)  :oLogLevelsStatusMessages};
+        
+    }
+    
+    return defaultStatusInformations;
+}
+
+- (BOOL)xcodeColorsPluginIsEnabled {
+    
+    static NSString *xcEnabledString;
+    
+    if (!xcEnabledString) {
+        char *xcode_colors = getenv("XcodeColors");
+        xcEnabledString = xcode_colors && (strcmp(xcode_colors, "YES") == 0) ? @"YES":@"NO";
+    }
+    
+    return [xcEnabledString boolValue];
+}
+
 - (NSString *)convertBackgroundColorToText:(NSString *)colorString
 {
     return [colorString stringByReplacingOccurrencesOfString:@"bg"
@@ -269,158 +355,29 @@ static NSString *const STATUS_OLOG_ERROR     = @"ONLINE:ERROR";
     return nil;
 }
 
-- (NSString *)logTypeStringForHeaderFromType:(XLOGGER_TYPE)paramXLogType level:(XLOGGER_LEVEL)paramXLogLevel
+- (NSString *)defaultStatusMessageForLogType:(XLOGGER_TYPE)paramXLogType level:(XLOGGER_LEVEL)paramXLogLevel
 {
-    switch (paramXLogType)
-    {
-        case XLOGGER_TYPE_DEBUG:
-        {
-            switch (paramXLogLevel)
-            {
-                case XLOGGER_LEVEL_SIMPLE:
-                    return STATUS_DLOG_SIMPLE;
-                    break;
-                case XLOGGER_LEVEL_INFORMATION:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_INFO_LEVEL],
-                            STATUS_DLOG_INFO,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_HIGHLIGHT:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_HIGHLIGHT_LEVEL],
-                            STATUS_DLOG_HIGHLIGHT,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_WARNING:
-                    return [NSString stringWithFormat:@"%@%@%@%@",
-                            XCODE_COLORS_ESCAPE,
-                            DEFAULT_STATUS_TEXT_COLOR_WARNING,
-                            STATUS_DLOG_WARNING,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_ERROR:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_ERROR_LEVEL],
-                            STATUS_DLOG_ERROR,
-                            XCODE_COLORS_RESET];
-                    break;
-                default:
-                    break;
-            }
-        }
-            break;
-        case XLOGGER_TYPE_DEVELOPMENT:
-        {
-            switch (paramXLogLevel)
-            {
-                case XLOGGER_LEVEL_SIMPLE:
-                    return STATUS_DVLOG_SIMPLE;
-                    break;
-                case XLOGGER_LEVEL_INFORMATION:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_INFO_LEVEL],
-                            STATUS_DVLOG_INFO,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_HIGHLIGHT:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_HIGHLIGHT_LEVEL],
-                            STATUS_DVLOG_HIGHLIGHT,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_WARNING:
-                    return [NSString stringWithFormat:@"%@%@%@%@",
-                            XCODE_COLORS_ESCAPE,
-                            DEFAULT_STATUS_TEXT_COLOR_WARNING,
-                            STATUS_DVLOG_WARNING,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_ERROR:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_ERROR_LEVEL],
-                            STATUS_DVLOG_ERROR,
-                            XCODE_COLORS_RESET];
-                default:
-                    break;
-            }
-        }
-            break;
-        case XLOGGER_TYPE_DEBUG_DEVELOPMENT:
-        {
-            switch (paramXLogLevel)
-            {
-                case XLOGGER_LEVEL_SIMPLE:
-                    return STATUS_DDLOG_SIMPLE;
-                    break;
-                case XLOGGER_LEVEL_INFORMATION:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_INFO_LEVEL],
-                            STATUS_DDLOG_INFO,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_HIGHLIGHT:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_HIGHLIGHT_LEVEL],
-                            STATUS_DDLOG_HIGHLIGHT,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_WARNING:
-                    return [NSString stringWithFormat:@"%@%@%@%@",
-                            XCODE_COLORS_ESCAPE,
-                            DEFAULT_STATUS_TEXT_COLOR_WARNING,
-                            STATUS_DDLOG_WARNING,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_ERROR:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_ERROR_LEVEL],
-                            STATUS_DDLOG_ERROR,
-                            XCODE_COLORS_RESET];
-                    break;
-                default:
-                    break;
-            }
-        }
-            break;
-        case XLOGGER_TYPE_ONLINE_SERVICES:
-        {
-            switch (paramXLogLevel)
-            {
-                case XLOGGER_LEVEL_SIMPLE:
-                    return STATUS_OLOG_SIMPLE;
-                    break;
-                case XLOGGER_LEVEL_INFORMATION:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_INFO_LEVEL],
-                            STATUS_OLOG_INFO,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_HIGHLIGHT:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_HIGHLIGHT_LEVEL],
-                            STATUS_OLOG_HIGHLIGHT,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_WARNING:
-                    return [NSString stringWithFormat:@"%@%@%@%@",
-                            XCODE_COLORS_ESCAPE,
-                            DEFAULT_STATUS_TEXT_COLOR_WARNING,
-                            STATUS_OLOG_WARNING,
-                            XCODE_COLORS_RESET];
-                    break;
-                case XLOGGER_LEVEL_ERROR:
-                    return [NSString stringWithFormat:@"%@%@%@",
-                            [self convertBackgroundColorToText:DEFAULT_BGRD_COLOR_ERROR_LEVEL],
-                            STATUS_OLOG_ERROR,
-                            XCODE_COLORS_RESET];
-                    break;
-                default:
-                    break;
-            }
-        }
+    
+    NSDictionary *statusDictionary = [self getDefaultStatusInformations];
+    
+    NSString *statusMessage = statusDictionary[XLogType_Key(paramXLogType)][XLogLevel_Key(paramXLogLevel)];
+    NSString *statusColor   = statusDictionary[key_Status_Color][XLogLevel_Key(paramXLogLevel)];
+
+    switch (paramXLogLevel) {
+        case XLOGGER_LEVEL_SIMPLE:
+            return statusMessage;
             break;
         default:
+        {
+            if ([self xcodeColorsPluginIsEnabled]) {
+                return [NSString stringWithFormat:@"%@%@%@",
+                        [self convertBackgroundColorToText:statusColor],
+                        statusMessage,
+                        XCODE_COLORS_RESET];
+            } else {
+                return statusMessage;
+            }
+        }
             break;
     }
     return nil;

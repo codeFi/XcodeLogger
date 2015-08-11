@@ -19,13 +19,13 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
-    //grab a hold of it
+    //grab a reference to Xcode Logger singleton instance
     XcodeLogger *xManager = [XcodeLogger sharedManager];
-    
+        
     //check Info.plist to see why
     [xManager setInfoPlistKeyNameForRunningSchemes:@"XLRunningScheme"];
     
-    //linking..
+    //scheme linking - case insensitive
     [xManager setBuildSchemeName:@"xl debug"
                      forXLogType:XLOGGER_TYPE_DEBUG];
     
