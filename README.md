@@ -35,14 +35,14 @@ Every log type has the following **log levels**:
  - Warning logger - `_WARNING`
  - Error logger - `_ERROR`
 
-Extremely easy to use, __filterable log levels per class__. 
+`NEW:` Extremely easy to use, __filterable log levels per class__. 
 
-__Color Themes__ with UIColor, NSColor and RGB colors support (Themers, you're needed here!).
+`NEW:` __Color Themes__ with UIColor, NSColor and RGB colors support (Themers, you're needed here!).
 
 Almost every log type and level can be can be customized as follows:
 - Running scheme (except `XLog` & `DDLog` types).
 - Log Informations Header (except `_NH`).
-- Log status description for all log types and levels (except `_NH`) which can be used as an argument in custom or default headers.
+- `NEW` Log status description for all log types and levels (except `_NH`) which can be used as an argument in custom or default headers.
 - Text Color for output (overwrite values from the loaded theme).
 - Background Color for output (overwrite values from the loaded theme).
 - Number of new lines (spaces) between header and output or between output and the next log statement.
@@ -216,6 +216,9 @@ You can also change the `timestamp` format by using a valid `NSDateFormatter` fo
 ```
 
 ### __NEW:__ `Color Themes`
+![Give me colors]
+(http://i58.tinypic.com/2lvgrph.jpg)
+
 Xcode Logger uses color themes for its log types and levels. 
 It comes with two default themes and you can very easily create your own.
 
