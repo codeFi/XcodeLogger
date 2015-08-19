@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+// #define ENABLE_COCOALUMBERJACK
+
 @interface XLPerformanceTests : NSObject
 
 + (void)startDefaultPerformanceTest;

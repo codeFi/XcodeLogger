@@ -1,15 +1,12 @@
 Pod::Spec.new do |s|
 
   s.name         = "XcodeLogger"
-  s.version      = "1.0.1"
+  s.version      = "1.1.1"
   s.summary      = "Simple, fast, colorful, flexible and customizable NSLog replacement."
   s.description  = <<-DESC
-                   Xcode Logger is a fast (up to *35x times faster than NSLog), simple to use, flexible library which 
-                   provides colorful and scheme-based NSLog replacements using the Xcode Colors plugin for Xcode IDE which 
-                   works great in multi-threaded environments.
+                   Xcode Logger is a fast (up to *6x times faster than NSLog and up to 4x times faster than CocoaLumberjack), extremely simple to use, very flexible library which provides scheme-based, customizable and theme based, colorful and filterable NSLog replacements.
 
-                   *based on tests comparing NSLog vs XLog's No Header level, average operation time after 5 runs with 
-                   5000 iterations per run on a MacBook Pro Retina. 
+*based on synchronous tests running on main thread, comparing XLog_NH vs NSLog vs DDLogVerbose, average operation time after 5 runs with 5000 iterations per test, per run on a MacBook Pro Retina. Xcode Logger had colors enabled for every level while for CocoaLumberjack the colors were disabled.
                    DESC
 
   s.homepage     = "https://github.com/codeFi/XcodeLogger"
@@ -21,10 +18,10 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.7"
   s.source       = { 
   					 :git => "https://github.com/codeFi/XcodeLogger.git", 
-  					 :tag => "1.0.1"
+  					 :tag => "1.1.1"
   				   }
 
   s.source_files  = "XcodeLogger/**/*.{h,m}"
-
+  s.resources = "XcodeLogger/**/*.plist"
 
 end

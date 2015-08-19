@@ -16,6 +16,8 @@
 		E59B4F621B55F554005A2E7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59B4F601B55F554005A2E7B /* Main.storyboard */; };
 		E59B4F641B55F554005A2E7B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E59B4F631B55F554005A2E7B /* Images.xcassets */; };
 		E59B4F671B55F554005A2E7B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E59B4F651B55F554005A2E7B /* LaunchScreen.xib */; };
+		E5F244AF1B8221F90000C056 /* XLColorThemes.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F244AE1B8221F90000C056 /* XLColorThemes.plist */; };
+		E5F244B21B822CED0000C056 /* XLColorThemes.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F244B11B822CED0000C056 /* XLColorThemes.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,9 @@
 		E59B4F611B55F554005A2E7B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E59B4F631B55F554005A2E7B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E59B4F661B55F554005A2E7B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		E5F244AE1B8221F90000C056 /* XLColorThemes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = XLColorThemes.plist; path = ../../XcodeLogger/Core/XLColorThemes.plist; sourceTree = "<group>"; };
+		E5F244B01B822CED0000C056 /* XLColorThemes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XLColorThemes.h; path = ../../XcodeLogger/Core/XLColorThemes.h; sourceTree = "<group>"; };
+		E5F244B11B822CED0000C056 /* XLColorThemes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XLColorThemes.m; path = ../../XcodeLogger/Core/XLColorThemes.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,8 +134,11 @@
 				E52E0B4E1B7A0D7600169EC6 /* XLogTypes.h */,
 				E52E0B4D1B7A0D7600169EC6 /* XLogObject.h */,
 				E52E0B501B7A0D7600169EC6 /* XLogObject.m */,
+				E5F244B01B822CED0000C056 /* XLColorThemes.h */,
+				E5F244B11B822CED0000C056 /* XLColorThemes.m */,
 				E52E0B4C1B7A0D7600169EC6 /* XcodeLogger.h */,
 				E52E0B4F1B7A0D7600169EC6 /* XcodeLogger.m */,
+				E5F244AE1B8221F90000C056 /* XLColorThemes.plist */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -204,6 +212,7 @@
 			files = (
 				E59B4F621B55F554005A2E7B /* Main.storyboard in Resources */,
 				E59B4F671B55F554005A2E7B /* LaunchScreen.xib in Resources */,
+				E5F244AF1B8221F90000C056 /* XLColorThemes.plist in Resources */,
 				E59B4F641B55F554005A2E7B /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E52E0B521B7A0D7600169EC6 /* XLogObject.m in Sources */,
+				E5F244B21B822CED0000C056 /* XLColorThemes.m in Sources */,
 				E59B4F5F1B55F554005A2E7B /* ViewController.m in Sources */,
 				E59B4F5C1B55F554005A2E7B /* AppDelegate.m in Sources */,
 				E59B4F591B55F554005A2E7B /* main.m in Sources */,
