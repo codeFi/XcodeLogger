@@ -217,7 +217,7 @@ You can also change the `timestamp` format by using a valid `NSDateFormatter` fo
 
 ### __NEW:__ `Color Themes`
 ![Give me colors]
-(http://i58.tinypic.com/2lvgrph.jpg)
+(http://i61.tinypic.com/ngahs4.png)
 
 Xcode Logger uses color themes for its log types and levels. 
 It comes with two default themes and you can very easily create your own.
@@ -326,7 +326,7 @@ This library was created and made open-source by [Razvan Tanase](https://ro.link
 
 You can also find me on Twitter [@razvan_tanase](https://twitter.com/razvan_tanase).
 
-I appreciate any feedback, positive or negative so I can improve this project.
+I highly appreciate any feedback, positive and/or constructive so I can improve this project.
 
 #### License
 __You're invited and more than welcomed to contribute to this project!__ When you have a change you’d like to see in the master repository, please [send a pull request](https://github.com/codeFi/XcodeLogger/pulls).
