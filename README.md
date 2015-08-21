@@ -262,7 +262,7 @@ You also have detailed `theme creation instructions` by calling:
 
 
 ### `Colors Formatting Options`
-You can enable or disable support for color logs and change the text and background colors of the body of the output (headers excluded).
+You can enable or disable support for color logs and change the text and background colors of the body of the output (headers excluded) independently of the currently loaded color theme (if it's loaded before making a color change).
 
 By default, colors are enabled but you can change this by calling:
 ```Objective-C
