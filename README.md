@@ -6,7 +6,7 @@
 
 **Xcode Logger** is a __fast__ (up to *6x times faster than NSLog and up to 4x times faster than CocoaLumberjack), __extremely simple__ to use, very __flexible__ library which provides __scheme-based__, __customizable__ and __theme based, colorful__ and __filterable NSLog replacements__.
 
-**based on synchronous serial tests running on main thread, comparing XLog_NH vs NSLog vs DDLogVerbose, average operation time after 5 runs with 5000 iterations per test, per run on a MacBook Pro Retina. Xcode Logger with colors enabled, CocoaLumberjack with ASL (file logging) and colors disabled.*
+**based on synchronous serial tests running on main thread, comparing XLog_NH vs NSLog vs DDLogVerbose, average operation time after 5 runs with 5000 iterations per test, per run on a MacBook Pro Retina. Xcode Logger with colors enabled, CocoaLumberjack with ASL (file logging) and colors disabled. Also, the CocoaLumberjack's DDLogVerbose macro was modified to run synchronously.*
 
 ---
 Xcode Logger has been tested on iOS 7, 8 and OSX. It requires ARC.
