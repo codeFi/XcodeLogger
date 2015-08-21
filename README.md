@@ -6,7 +6,7 @@
 
 **Xcode Logger** is a __fast__ (up to *6x times faster than NSLog and up to 4x times faster than CocoaLumberjack), __extremely simple__ to use, very __flexible__ library which provides __scheme-based__, __customizable__ and __theme based, colorful__ and __filterable NSLog replacements__.
 
-**based on synchronous tests running on main thread, comparing XLog_NH vs NSLog vs DDLogVerbose, average operation time after 5 runs with 5000 iterations per test, per run on a MacBook Pro Retina. Xcode Logger had colors enabled for every level while for CocoaLumberjack the colors were disabled.*
+**based on synchronous serial tests running on main thread, comparing XLog_NH vs NSLog vs DDLogVerbose, average operation time after 5 runs with 5000 iterations per test, per run on a MacBook Pro Retina. Xcode Logger with colors enabled, CocoaLumberjack with colors disabled.*
 
 ---
 Xcode Logger has been tested on iOS 7, 8 and OSX. It requires ARC.
@@ -35,7 +35,7 @@ Every log type has the following **log levels**:
  - Warning logger - `_WARNING`
  - Error logger - `_ERROR`
 
-`NEW:` Extremely easy to use, __filterable log levels per class__. 
+`NEW:` Extremely easy to use, __filterable log levels__. 
 
 `NEW:` __Color Themes__ with UIColor, NSColor and RGB colors support (Themers, you're needed here!).
 
@@ -155,7 +155,7 @@ You can change the default and customize the informations header for any `XLOGGE
 								               level:XLOGGER_LEVEL_INFORMATION];
 
 //Example for changing the informations header for DVLog_INFO()
-//This will set the header to show a timestamp followed by the line number
+//This will set the header to show the log description and a timestamp followed by the line number
 [[XcodeLogger sharedManager] setHeaderForXLogType:XLOGGER_TYPE_DEVELOPMENT
                           					level:XLOGGER_LEVEL_INFORMATION
                           				   format:@"{%@}->[%@]::[#%@]"
@@ -222,7 +222,7 @@ You can also change the `timestamp` format by using a valid `NSDateFormatter` fo
 Xcode Logger uses color themes for its log types and levels. 
 It comes with two default themes and you can very easily create your own.
 
-You can use different themes for different `Classes` or parts of your implementation files.
+Different color themes can be used in different classes.
 
 You can check the available themes by calling 
 ```Objective-C
@@ -246,11 +246,10 @@ static NSString *const XLCT_DEFAULT_DARK_THEME  = @"DEFAULT_DARK_THEME";
 > NOTE: Xcode Logger loads `DEFAULT_LIGHT_THEME` by default so you don't have to call `loadColorThemeWithName:` if you're not interested in changing the theme.
 
 #### Creating Color Themes
-First of all, __I would be very happy and honoured if you would contribute with new themes__ by sending a pull request!
 
 All Xcode Logger's themes are defined in `XLColorThemes.plist` file where you can find two `sample themes` next to the default ones.
 
-All you have to do is to duplicate those samples, rename and modify them accordingly while preserving the `keys` for every `dictionary` __except__ the `root key` which is the theme's name.
+All you have to do is to duplicate those samples, rename and modify them accordingly while preserving the `keys` for every `dictionary` __except__ the `root dictionary key` which is the theme's name.
 
 You can use either RGB values separated by whitespace or `,./-*+` or you can use `UIColor/NSColor` selectors like this `blackColor`.
 
@@ -273,7 +272,8 @@ By default, colors are enabled but you can change this by calling:
 You can set the text color for the output by calling:
 ```Objective-C
 NEW: 
-//XLColor is a convenience macro for cross platform UIColor/NSColor
+//XLColor is a convenience macro for cross platform
+//compatibility between iOS (UIColor) and OSX (NSColor)
 - (void)setTextColor:(XLColor *)paramTextColor
          forXLogType:(XLOGGER_TYPE)paramLogType
                level:(XLOGGER_LEVEL)paramLogLevel;
@@ -289,7 +289,8 @@ NEW:
 And you can set the background color for the output by calling:
 ```Objective-C
 NEW:
-//XLColor is a convenience macro for cross platform UIColor/NSColor
+//XLColor is a convenience macro for cross platform
+//compatibility between iOS (UIColor) and OSX (NSColor)
 - (void)setBackgroundColor:(XLColor *)paramBackgroundColor
                forXLogType:(XLOGGER_TYPE)paramLogType
                      level:(XLOGGER_LEVEL)paramLogLevel
@@ -307,7 +308,7 @@ NEW:
 
 ### Code Samples
 This repository contains code samples for both `iOS` and `OSX`.   
-These are GREAT to see and test some examples of uses for __Xcode Logger__.  
+These are GREAT to see and test some examples for uses of __Xcode Logger__.  
 You can find them in the master folder after cloning or downloading the repository.
 
 ### Changelog:
