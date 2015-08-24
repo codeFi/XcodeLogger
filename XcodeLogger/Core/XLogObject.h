@@ -35,7 +35,7 @@
 @property (nonatomic, copy)   NSArray   *headerArguments;
 
 @property (nonatomic, readonly) NSString *logHeaderDescription;
-@property (nonatomic, readonly) NSString *logTypeString;
+@property (nonatomic, readonly) NSString *logDescription;
 @property (nonatomic, readonly) NSString *buildScheme;
 @property (nonatomic, readonly) NSString *outputColor;
 @property (nonatomic, readonly) NSString *newlinesAfterHeader;
@@ -48,6 +48,7 @@
 - (void)setBuildScheme:(NSString *)buildScheme;
 
 - (void)setLogHeaderDescription:(NSString *)paramLogDescription;
+- (void)setColorForLogHeaderDescription:(XLColor *)paramColor;
 
 - (void)setTextColorWithRed:(NSUInteger)red Green:(NSUInteger)green Blue:(NSUInteger)blue;
 - (void)setTextColor:(XLColor *)paramTextColor;

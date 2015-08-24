@@ -17,7 +17,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 static NSString *key_XLOG           = @"XLOG";
 static NSString *key_XLOG_NH        = @"XLOG_NH";
 static NSString *key_XLOG_INFO      = @"XLOG_INFO";
-static NSString *key_XLOG_HIGHLIGHT = @"XLOG_HIGHLIGHT";
+static NSString *key_XLOG_IMPORTANT = @"XLOG_IMPORTANT";
 static NSString *key_XLOG_WARNING   = @"XLOG_WARNING";
 static NSString *key_XLOG_ERROR     = @"XLOG_ERROR";
 static NSString *key_NSLOG          = @"NSLOG";
@@ -29,7 +29,7 @@ static NSString *const key_TestNumber = @"TEST_";
 static double sum_XLOG;
 static double sum_XLOG_NH;
 static double sum_XLOG_INFO;
-static double sum_XLOG_HIGHLIGHT;
+static double sum_XLOG_IMPORTANT;
 static double sum_XLOG_WARNING;
 static double sum_XLOG_ERROR;
 static double sum_NSLOG;
@@ -55,7 +55,7 @@ static double sum_CLJ;
     XLog_NH(@"XLOG:SIMPLE    > %f seconds",[(NSNumber *)results[key_XLOG] doubleValue]);
     XLog_NH(@"XLOG:SIMPLE_NH > %f seconds",[(NSNumber *)results[key_XLOG_NH] doubleValue]);
     XLog_NH(@"XLOG:INFO      > %f seconds",[(NSNumber *)results[key_XLOG_INFO] doubleValue]);
-    XLog_NH(@"XLOG:HIGHLIGHT > %f seconds",[(NSNumber *)results[key_XLOG_HIGHLIGHT] doubleValue]);
+    XLog_NH(@"XLOG:IMPORTANT > %f seconds",[(NSNumber *)results[key_XLOG_IMPORTANT] doubleValue]);
     XLog_NH(@"XLOG:WARNING   > %f seconds",[(NSNumber *)results[key_XLOG_WARNING] doubleValue]);
     XLog_NH(@"XLOG:ERROR     > %f seconds",[(NSNumber *)results[key_XLOG_ERROR] doubleValue]);
     XLog_NH(@"NSLOG          > %f seconds",[(NSNumber *)results[key_NSLOG] doubleValue]);
@@ -92,7 +92,7 @@ static double sum_CLJ;
     
     
     for (NSUInteger testsCount = 1; testsCount <= numberOfRuns; testsCount++) {
-        XLog_HIGHLIGHT(@"\n\nRUNNING TEST NUMBER %tu\n\n", testsCount);
+        XLog_IMPORTANT(@"\n\nRUNNING TEST NUMBER %tu\n\n", testsCount);
         sleep(2);
         NSDictionary *currentTest = [self startTestWithNumberOfIterations:numberOfIterations];
         NSString *testKey = [key_TestNumber stringByAppendingString:[NSString stringWithFormat:@"%tu",testsCount]];
@@ -106,7 +106,7 @@ static double sum_CLJ;
     NSString *result_XLOG = [NSString string];
     NSString *result_XLOG_NH = [NSString string];
     NSString *result_XLOG_INFO = [NSString string];
-    NSString *result_XLOG_HIGHLIGHT = [NSString string];
+    NSString *result_XLOG_IMPORTANT = [NSString string];
     NSString *result_XLOG_WARNING = [NSString string];
     NSString *result_XLOG_ERROR = [NSString string];
     NSString *result_NSLOG = [NSString string];
@@ -121,7 +121,7 @@ static double sum_CLJ;
         result_XLOG = [result_XLOG stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
         result_XLOG_NH = [result_XLOG_NH stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
         result_XLOG_INFO = [result_XLOG_INFO stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
-        result_XLOG_HIGHLIGHT = [result_XLOG_HIGHLIGHT stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
+        result_XLOG_IMPORTANT = [result_XLOG_IMPORTANT stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
         result_XLOG_WARNING = [result_XLOG_WARNING stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
         result_XLOG_ERROR = [result_XLOG_ERROR stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
         result_NSLOG = [result_NSLOG stringByAppendingString:[NSString stringWithFormat:@"%@: ", dictionaryKey]];
@@ -156,14 +156,14 @@ static double sum_CLJ;
                                                  fromDict:currentDictionary
                                          appendWithString:result_XLOG_INFO];
             
-            sum_XLOG_HIGHLIGHT += [self valueByComparingKey:key_XLOG_HIGHLIGHT
+            sum_XLOG_IMPORTANT += [self valueByComparingKey:key_XLOG_IMPORTANT
                                                 withDictKey:resultKey
                                                    fromDict:currentDictionary];
             
-            result_XLOG_HIGHLIGHT = [self stringByComparingKey:key_XLOG_HIGHLIGHT
+            result_XLOG_IMPORTANT = [self stringByComparingKey:key_XLOG_IMPORTANT
                                                    withDictKey:resultKey
                                                       fromDict:currentDictionary
-                                              appendWithString:result_XLOG_HIGHLIGHT];
+                                              appendWithString:result_XLOG_IMPORTANT];
             
             sum_XLOG_WARNING += [self valueByComparingKey:key_XLOG_WARNING
                                               withDictKey:resultKey
@@ -212,18 +212,18 @@ static double sum_CLJ;
     result_XLOG           = [self replaceLastCharacters:@", " fromString:result_XLOG withString:@"."];
     result_XLOG_NH        = [self replaceLastCharacters:@", " fromString:result_XLOG_NH withString:@"."];
     result_XLOG_INFO      = [self replaceLastCharacters:@", " fromString:result_XLOG_INFO withString:@"."];
-    result_XLOG_HIGHLIGHT = [self replaceLastCharacters:@", " fromString:result_XLOG_HIGHLIGHT withString:@"."];
+    result_XLOG_IMPORTANT = [self replaceLastCharacters:@", " fromString:result_XLOG_IMPORTANT withString:@"."];
     result_XLOG_WARNING   = [self replaceLastCharacters:@", " fromString:result_XLOG_WARNING withString:@"."];
     result_XLOG_ERROR     = [self replaceLastCharacters:@", " fromString:result_XLOG_ERROR withString:@"."];
     
-    XLog_HIGHLIGHT(@"\n\nDONE!\n\n");
+    XLog_IMPORTANT(@"\n\nDONE!\n\n");
     
     XLog_NH(@"NSLOG          > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_NSLOG, sum_NSLOG/numberOfRuns, result_NSLOG);
     XLog_NH(@"CocoaLumberjack> TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_CLJ, sum_CLJ/numberOfRuns, result_CLJ);
     XLog_NH(@"XLOG           > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_XLOG, sum_XLOG/numberOfRuns, result_XLOG);
     XLog_NH(@"XLOG_NH        > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_XLOG_NH, sum_XLOG_NH/numberOfRuns, result_XLOG_NH);
     XLog_NH(@"XLOG_INFO      > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_XLOG_INFO, sum_XLOG_INFO/numberOfRuns, result_XLOG_INFO);
-    XLog_NH(@"XLOG_HIGHLIGHT > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_XLOG_HIGHLIGHT, sum_XLOG_HIGHLIGHT/numberOfRuns, result_XLOG_HIGHLIGHT);
+    XLog_NH(@"XLOG_IMPORTANT > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_XLOG_IMPORTANT, sum_XLOG_IMPORTANT/numberOfRuns, result_XLOG_IMPORTANT);
     XLog_NH(@"XLOG_WARNING   > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_XLOG_WARNING, sum_XLOG_WARNING/numberOfRuns, result_XLOG_WARNING);
     XLog_NH(@"XLOG_ERROR     > TOTAL TIME: %fs | AVERAGE: %fs | %@", sum_XLOG_ERROR, sum_XLOG_ERROR/numberOfRuns, result_XLOG_ERROR);
     
@@ -240,7 +240,7 @@ static double sum_CLJ;
     static NSNumber *r_XLOG;
     static NSNumber *r_XLOG_NH;
     static NSNumber *r_XLOG_INFO;
-    static NSNumber *r_XLOG_HIGHLIGHT;
+    static NSNumber *r_XLOG_IMPORTANT;
     static NSNumber *r_XLOG_WARNING;
     static NSNumber *r_XLOG_ERROR;
     static NSNumber *r_NSLOG;
@@ -249,7 +249,7 @@ static double sum_CLJ;
 #endif
     
     
-    XLog_HIGHLIGHT(@"\nTesting XLog Level: Simple...\n");
+    XLog_IMPORTANT(@"\nTesting XLog Level: Simple...\n");
     
     sleep(2);
     
@@ -262,7 +262,7 @@ static double sum_CLJ;
     
     //----//
     
-    XLog_HIGHLIGHT(@"\nTesting XLog Level: Simple, No Header...\n");
+    XLog_IMPORTANT(@"\nTesting XLog Level: Simple, No Header...\n");
     
     sleep(2);
     
@@ -275,7 +275,7 @@ static double sum_CLJ;
     
     //----//
     
-    XLog_HIGHLIGHT(@"\nTesting XLog Level: Info...\n");
+    XLog_IMPORTANT(@"\nTesting XLog Level: Info...\n");
     
     sleep(2);
     
@@ -288,20 +288,20 @@ static double sum_CLJ;
     
     //----//
     
-    XLog_HIGHLIGHT(@"\nTesting XLog Level: Highlight...\n");
+    XLog_IMPORTANT(@"\nTesting XLog Level: IMPORTANT...\n");
     
     sleep(2);
     
     startTime = [NSDate date];
     for (int index = 0; index <= numberOfIterations; index++) {
-        XLog_HIGHLIGHT(@"Loop index: %d", index);
+        XLog_IMPORTANT(@"Loop index: %d", index);
     }
     secondsPassed = -[startTime timeIntervalSinceNow];
-    r_XLOG_HIGHLIGHT = [NSNumber numberWithDouble:secondsPassed];
+    r_XLOG_IMPORTANT = [NSNumber numberWithDouble:secondsPassed];
     
     //----//
     
-    XLog_HIGHLIGHT(@"\nTesting XLog Level: Warning...\n");
+    XLog_IMPORTANT(@"\nTesting XLog Level: Warning...\n");
     
     sleep(2);
     
@@ -314,7 +314,7 @@ static double sum_CLJ;
     
     //----//
     
-    XLog_HIGHLIGHT(@"\nTesting XLog Level: Error...\n");
+    XLog_IMPORTANT(@"\nTesting XLog Level: Error...\n");
     
     sleep(2);
     
@@ -327,7 +327,7 @@ static double sum_CLJ;
     
     //----//
     
-    XLog_HIGHLIGHT(@"\nTesting NSLog...\n");
+    XLog_IMPORTANT(@"\nTesting NSLog...\n");
     
     sleep(2);
     
@@ -340,7 +340,7 @@ static double sum_CLJ;
     
     //----//
 #ifdef ENABLE_COCOALUMBERJACK
-    XLog_HIGHLIGHT(@"\nTesting CocoaLumberjack...\n");
+    XLog_IMPORTANT(@"\nTesting CocoaLumberjack...\n");
     
     sleep(2);
     
@@ -355,7 +355,7 @@ static double sum_CLJ;
     NSDictionary *resultsDictionary =  @{key_XLOG:r_XLOG,
                                          key_XLOG_NH:r_XLOG_NH,
                                          key_XLOG_INFO:r_XLOG_INFO,
-                                         key_XLOG_HIGHLIGHT:r_XLOG_HIGHLIGHT,
+                                         key_XLOG_IMPORTANT:r_XLOG_IMPORTANT,
                                          key_XLOG_WARNING:r_XLOG_WARNING,
                                          key_XLOG_ERROR:r_XLOG_ERROR,
                                          key_NSLOG:r_NSLOG,

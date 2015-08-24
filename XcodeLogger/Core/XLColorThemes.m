@@ -43,7 +43,7 @@ static NSString *const key_XLCOLORTHEMES_TYPE_OLOG  = @"OLOG";
 static NSString *const key_XLCOLORTHEMES_LEVELS_SIMPLE    = @"SIMPLE";
 static NSString *const key_XLCOLORTHEMES_LEVELS_NOHEADER  = @"NO_HEADER";
 static NSString *const key_XLCOLORTHEMES_LEVELS_INFO      = @"INFO";
-static NSString *const key_XLCOLORTHEMES_LEVELS_HIGHLIGHT = @"HIGHLIGHT";
+static NSString *const key_XLCOLORTHEMES_LEVELS_IMPORTANT = @"IMPORTANT";
 static NSString *const key_XLCOLORTHEMES_LEVELS_WARNING   = @"WARNING";
 static NSString *const key_XLCOLORTHEMES_LEVELS_ERROR     = @"ERROR";
 
@@ -182,8 +182,8 @@ static NSString *const key_XLCOLORTHEMES_LEVELS_ERROR     = @"ERROR";
         return XLOGGER_LEVEL_SIMPLE_NO_HEADER;
     } else if ([key isEqualToString:key_XLCOLORTHEMES_LEVELS_INFO]) {
         return XLOGGER_LEVEL_INFORMATION;
-    } else if ([key isEqualToString:key_XLCOLORTHEMES_LEVELS_HIGHLIGHT]) {
-        return XLOGGER_LEVEL_HIGHLIGHT;
+    } else if ([key isEqualToString:key_XLCOLORTHEMES_LEVELS_IMPORTANT]) {
+        return XLOGGER_LEVEL_IMPORTANT;
     } else if ([key isEqualToString:key_XLCOLORTHEMES_LEVELS_WARNING]) {
         return XLOGGER_LEVEL_WARNING;
     } else if ([key isEqualToString:key_XLCOLORTHEMES_LEVELS_ERROR]) {
@@ -204,8 +204,8 @@ static NSString *const key_XLCOLORTHEMES_LEVELS_ERROR     = @"ERROR";
         case XLOGGER_LEVEL_INFORMATION:
             return key_XLCOLORTHEMES_LEVELS_INFO;
             break;
-        case XLOGGER_LEVEL_HIGHLIGHT:
-            return key_XLCOLORTHEMES_LEVELS_HIGHLIGHT;
+        case XLOGGER_LEVEL_IMPORTANT:
+            return key_XLCOLORTHEMES_LEVELS_IMPORTANT;
             break;
         case XLOGGER_LEVEL_WARNING:
             return key_XLCOLORTHEMES_LEVELS_WARNING;
@@ -234,7 +234,7 @@ static NSString *const key_XLCOLORTHEMES_LEVELS_ERROR     = @"ERROR";
     NSArray *logLevelsArray = @[key_XLCOLORTHEMES_LEVELS_SIMPLE,
                                 key_XLCOLORTHEMES_LEVELS_NOHEADER,
                                 key_XLCOLORTHEMES_LEVELS_INFO,
-                                key_XLCOLORTHEMES_LEVELS_HIGHLIGHT,
+                                key_XLCOLORTHEMES_LEVELS_IMPORTANT,
                                 key_XLCOLORTHEMES_LEVELS_WARNING,
                                 key_XLCOLORTHEMES_LEVELS_ERROR];
     return logLevelsArray;

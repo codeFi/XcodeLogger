@@ -50,7 +50,7 @@ typedef NS_ENUM(unsigned int, XLOGGER_LEVEL) {
     XLOGGER_LEVEL_SIMPLE = 10,
     XLOGGER_LEVEL_SIMPLE_NO_HEADER,
     XLOGGER_LEVEL_INFORMATION,
-    XLOGGER_LEVEL_HIGHLIGHT,
+    XLOGGER_LEVEL_IMPORTANT,
     XLOGGER_LEVEL_WARNING,
     XLOGGER_LEVEL_ERROR,
     XLOGGER_LEVEL_ALL
@@ -70,7 +70,7 @@ typedef NS_ENUM(unsigned int, XLOGGER_ARGS) {
 #define XL_LEVEL_SIMPLE           [NSNumber numberWithUnsignedInt:XLOGGER_LEVEL_SIMPLE]
 #define XL_LEVEL_SIMPLE_NO_HEADER [NSNumber numberWithUnsignedInt:XLOGGER_LEVEL_SIMPLE_NO_HEADER]
 #define XL_LEVEL_INFORMATION      [NSNumber numberWithUnsignedInt:XLOGGER_LEVEL_INFORMATION]
-#define XL_LEVEL_HIGHLIGHT        [NSNumber numberWithUnsignedInt:XLOGGER_LEVEL_HIGHLIGHT]
+#define XL_LEVEL_IMPORTANT        [NSNumber numberWithUnsignedInt:XLOGGER_LEVEL_IMPORTANT]
 #define XL_LEVEL_WARNING          [NSNumber numberWithUnsignedInt:XLOGGER_LEVEL_WARNING]
 #define XL_LEVEL_ERROR            [NSNumber numberWithUnsignedInt:XLOGGER_LEVEL_ERROR]
 

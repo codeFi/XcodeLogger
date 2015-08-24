@@ -33,8 +33,12 @@
 
 // THE DEFAULT COLOR THEMES FOR XCODE LOGGER
 // YOU'RE INVITED TO ADD(CREATE) MORE HERE AND SEND A PULL REQUEST (check -[printColorThemeCreationInstructions])
-static NSString *const XLCT_DEFAULT_LIGHT_THEME = @"DEFAULT_LIGHT_THEME";
-static NSString *const XLCT_DEFAULT_DARK_THEME  = @"DEFAULT_DARK_THEME";
+static NSString *const XLCT_DEFAULT_LIGHT_THEME  = @"DEFAULT_LIGHT_THEME"; //based on Xcode's Default Theme
+static NSString *const XLCT_DEFAULT_DUSK_THEME   = @"DEFAULT_DUSK_THEME";  //based on Xcode's Dusk Theme
+static NSString *const XLCT_DEFAULT_DARK_THEME   = @"DEFAULT_DARK_THEME";  //based on Xcode's Midnight Theme
+static NSString *const XLCT_SOLARIZE_LIGHT_THEME = @"SOLARIZE_LIGHT_THEME";//Based on Solarize Light Theme by Jason Brennan https://github.com/jbrennan/xcode4themes
+static NSString *const XLCT_SOLARIZE_DARK_THEME  = @"SOLARIZE_DARK_THEME"; //Based on Solarize Dark Theme by Jason Brennan https://github.com/jbrennan/xcode4themes
+static NSString *const XLCT_DRACULA_THEME        = @"DRACULA_THEME";       //Based on Dracula Theme by Zeno Rocha https://github.com/zenorocha/dracula-theme
 
 
 @interface XcodeLogger : NSObject
@@ -97,7 +101,7 @@ static NSString *const XLCT_DEFAULT_DARK_THEME  = @"DEFAULT_DARK_THEME";
  * XL_LEVEL_SIMPLE
  * XL_LEVEL_SIMPLE_NO_HEADER
  * XL_LEVEL_INFORMATION
- * XL_LEVEL_HIGHLIGHT
+ * XL_LEVEL_IMPORTANT
  * XL_LEVEL_WARNING
  * XL_LEVEL_ERROR
  *
@@ -138,7 +142,7 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *      XLOGGER_LEVEL_SIMPLE,
  *      XLOGGER_LEVEL_SIMPLE_NO_HEADER,
  *      XLOGGER_LEVEL_INFORMATION,
- *      XLOGGER_LEVEL_HIGHLIGHT,
+ *      XLOGGER_LEVEL_IMPORTANT,
  *      XLOGGER_LEVEL_WARNING,
  *      XLOGGER_LEVEL_ERROR,
  *      XLOGGER_LEVEL_ALL
@@ -179,7 +183,32 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  */
 - (void)setLogHeaderDescription:(NSString *)paramLogDescription
                      forLogType:(XLOGGER_TYPE)paramLogType
-                          level:(XLOGGER_LEVEL)paramLogLevel;
+                          level:(XLOGGER_LEVEL)paramLogLevel __attribute((deprecated("Deprecated in version 1.2.0. Use setLogHeaderDescription:forLogType:level:color: instead.")));
+
+
+/*!
+ *  @brief Changes the default and sets a short (or long..) description string for each log type and level
+ *  @discussion This method sets a string for the @c XL_ARG_LOG_DESCRIPTION argument which you can pass to
+ *  <code><i>setHeaderForXLogType:level:format:arguments:</i></code> method.
+ *  @discussion In case there's no @c XLColor passed as a parameter, this property takes its color
+ * from either background or text colors of the output.
+ *
+ * It tries to get the color from the background color property first and if that's nil,
+ * it will take it from the text color property.
+ *
+ * In case you specify an @c XLColor, the color of the Log Description <u>will not be changed</u>
+ * if you load a different color theme later.
+ *
+ *  @param paramLogDescription The description string.
+ *  @param paramLogType An enumerated value of type @c XLOGGER_TYPE. You can use @c XLOGGER_TYPE_ALL to set the same Log Description Header for every Log Type for the given Log Level.
+ *  @param paramLogLevel An enumerated value of type @c XLOGGER_LEVEL. NOTE: you <strong>cannot</strong> use @c XLOGGER_LEVEL_ALL enum value to set the same header for every level of the selected @c XLOGGER_TYPE.
+ *  @param paramColor An @c XLColor (UIColor or NSColor depending on the platform).
+ */
+- (void)setLogHeaderDescription:(NSString *)paramLogDescription
+                     forLogType:(XLOGGER_TYPE)paramLogType
+                          level:(XLOGGER_LEVEL)paramLogLevel
+                          color:(XLColor *)paramColor;
+
 
 /*!
  *  @brief  Adds or removes new lines between the information header and the body of the output.
@@ -204,7 +233,7 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *      XLOGGER_LEVEL_SIMPLE,
  *      XLOGGER_LEVEL_SIMPLE_NO_HEADER,
  *      XLOGGER_LEVEL_INFORMATION,
- *      XLOGGER_LEVEL_HIGHLIGHT,
+ *      XLOGGER_LEVEL_IMPORTANT,
  *      XLOGGER_LEVEL_WARNING,
  *      XLOGGER_LEVEL_ERROR,
  *      XLOGGER_LEVEL_ALL
@@ -243,7 +272,7 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *      XLOGGER_LEVEL_SIMPLE,
  *      XLOGGER_LEVEL_SIMPLE_NO_HEADER,
  *      XLOGGER_LEVEL_INFORMATION,
- *      XLOGGER_LEVEL_HIGHLIGHT,
+ *      XLOGGER_LEVEL_IMPORTANT,
  *      XLOGGER_LEVEL_WARNING,
  *      XLOGGER_LEVEL_ERROR,
  *      XLOGGER_LEVEL_ALL
@@ -300,14 +329,14 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *      XLOGGER_LEVEL_SIMPLE,
  *      XLOGGER_LEVEL_SIMPLE_NO_HEADER,
  *      XLOGGER_LEVEL_INFORMATION,
- *      XLOGGER_LEVEL_HIGHLIGHT,
+ *      XLOGGER_LEVEL_IMPORTANT,
  *      XLOGGER_LEVEL_WARNING,
  *      XLOGGER_LEVEL_ERROR,
  *   };
  *
  *  @endcode
  *
- *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE.
+ *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE. You can use @c XLOGGER_TYPE_ALL to set the color for a given level for all log types.
  *  @param paramLogLevel An enumerated value of type @c XLOGGER_LEVEL. <strong>Warning:</strong> you aren't allowed to use @c XLOGGER_LEVEL_ALL enum value! Doing so will raise an exception.
  *  @param red            Integer value of a red level.
  *  @param green          Integer value of a green level.
@@ -342,7 +371,7 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *      XLOGGER_LEVEL_SIMPLE,
  *      XLOGGER_LEVEL_SIMPLE_NO_HEADER,
  *      XLOGGER_LEVEL_INFORMATION,
- *      XLOGGER_LEVEL_HIGHLIGHT,
+ *      XLOGGER_LEVEL_IMPORTANT,
  *      XLOGGER_LEVEL_WARNING,
  *      XLOGGER_LEVEL_ERROR,
  *   };
@@ -350,7 +379,7 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *  @endcode
  *
  *  @param paramTextColor An XLColor (NSColor or UIColor).
- *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE.
+ *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE. You can use @c XLOGGER_TYPE_ALL to set the color for a given level for all log types.
  *  @param paramLogLevel An enumerated value of type @c XLOGGER_LEVEL. <strong>Warning:</strong> you aren't allowed to use @c XLOGGER_LEVEL_ALL enum value! Doing so will raise an exception.
  *
  */
@@ -381,14 +410,14 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *      XLOGGER_LEVEL_SIMPLE,
  *      XLOGGER_LEVEL_SIMPLE_NO_HEADER,
  *      XLOGGER_LEVEL_INFORMATION,
- *      XLOGGER_LEVEL_HIGHLIGHT,
+ *      XLOGGER_LEVEL_IMPORTANT,
  *      XLOGGER_LEVEL_WARNING,
  *      XLOGGER_LEVEL_ERROR,
  *   };
  *
  *  @endcode
  *
- *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE.
+ *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE. You can use @c XLOGGER_TYPE_ALL to set the color for a given level for all log types.
  *  @param paramLogLevel An enumerated value of type @c XLOGGER_LEVEL. <strong>Warning:</strong> you aren't allowed to use @c XLOGGER_LEVEL_ALL enum value! Doing so will raise an exception.
  *  @param red            Integer value of a red level.
  *  @param green          Integer value of a green level.
@@ -423,7 +452,7 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *      XLOGGER_LEVEL_SIMPLE,
  *      XLOGGER_LEVEL_SIMPLE_NO_HEADER,
  *      XLOGGER_LEVEL_INFORMATION,
- *      XLOGGER_LEVEL_HIGHLIGHT,
+ *      XLOGGER_LEVEL_IMPORTANT,
  *      XLOGGER_LEVEL_WARNING,
  *      XLOGGER_LEVEL_ERROR,
  *   };
@@ -431,7 +460,7 @@ forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
  *  @endcode
  *
  *  @param paramBackgroundColor An XLColor (NSColor or UIColor).
- *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE.
+ *  @param paramLogType  An enumerated value of type @c XLOGGER_TYPE. You can use @c XLOGGER_TYPE_ALL to set the color for a given level for all log types.
  *  @param paramLogLevel An enumerated value of type @c XLOGGER_LEVEL. <strong>Warning:</strong> you aren't allowed to use @c XLOGGER_LEVEL_ALL enum value! Doing so will raise an exception.
  */
 - (void)setBackgroundColor:(XLColor *)paramBackgroundColor
@@ -502,7 +531,7 @@ void  func_XLog_Output(XLOGGER_TYPE paramLogType,
 #define XLog(input, ...)           func_XLog_Output(XLOGGER_TYPE_NSLOG_REPLACEMENT,XLOGGER_LEVEL_SIMPLE,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define XLog_NH(input, ...)        func_XLog_Output(XLOGGER_TYPE_NSLOG_REPLACEMENT,XLOGGER_LEVEL_SIMPLE_NO_HEADER,nil,nil,FILE_NAME,0,input, ##__VA_ARGS__)
 #define XLog_INFO(input, ...)      func_XLog_Output(XLOGGER_TYPE_NSLOG_REPLACEMENT,XLOGGER_LEVEL_INFORMATION,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
-#define XLog_HIGHLIGHT(input, ...) func_XLog_Output(XLOGGER_TYPE_NSLOG_REPLACEMENT,XLOGGER_LEVEL_HIGHLIGHT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
+#define XLog_IMPORTANT(input, ...) func_XLog_Output(XLOGGER_TYPE_NSLOG_REPLACEMENT,XLOGGER_LEVEL_IMPORTANT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define XLog_WARNING(input, ...)   func_XLog_Output(XLOGGER_TYPE_NSLOG_REPLACEMENT,XLOGGER_LEVEL_WARNING,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define XLog_ERROR(input, ...)     func_XLog_Output(XLOGGER_TYPE_NSLOG_REPLACEMENT,XLOGGER_LEVEL_ERROR,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 
@@ -510,7 +539,7 @@ void  func_XLog_Output(XLOGGER_TYPE paramLogType,
 #define DLog(input, ...)           func_XLog_Output(XLOGGER_TYPE_DEBUG,XLOGGER_LEVEL_SIMPLE,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DLog_NH(input, ...)        func_XLog_Output(XLOGGER_TYPE_DEBUG,XLOGGER_LEVEL_SIMPLE_NO_HEADER,nil,nil,FILE_NAME,0,input, ##__VA_ARGS__)
 #define DLog_INFO(input, ...)      func_XLog_Output(XLOGGER_TYPE_DEBUG,XLOGGER_LEVEL_INFORMATION,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
-#define DLog_HIGHLIGHT(input, ...) func_XLog_Output(XLOGGER_TYPE_DEBUG,XLOGGER_LEVEL_HIGHLIGHT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
+#define DLog_IMPORTANT(input, ...) func_XLog_Output(XLOGGER_TYPE_DEBUG,XLOGGER_LEVEL_IMPORTANT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DLog_WARNING(input, ...)   func_XLog_Output(XLOGGER_TYPE_DEBUG,XLOGGER_LEVEL_WARNING,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DLog_ERROR(input, ...)     func_XLog_Output(XLOGGER_TYPE_DEBUG,XLOGGER_LEVEL_ERROR,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 
@@ -518,7 +547,7 @@ void  func_XLog_Output(XLOGGER_TYPE paramLogType,
 #define DVLog(input, ...)           func_XLog_Output(XLOGGER_TYPE_DEVELOPMENT,XLOGGER_LEVEL_SIMPLE,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DVLog_NH(input, ...)        func_XLog_Output(XLOGGER_TYPE_DEVELOPMENT,XLOGGER_LEVEL_SIMPLE_NO_HEADER,nil,nil,FILE_NAME,0,input, ##__VA_ARGS__)
 #define DVLog_INFO(input, ...)      func_XLog_Output(XLOGGER_TYPE_DEVELOPMENT,XLOGGER_LEVEL_INFORMATION,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
-#define DVLog_HIGHLIGHT(input, ...) func_XLog_Output(XLOGGER_TYPE_DEVELOPMENT,XLOGGER_LEVEL_HIGHLIGHT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
+#define DVLog_IMPORTANT(input, ...) func_XLog_Output(XLOGGER_TYPE_DEVELOPMENT,XLOGGER_LEVEL_IMPORTANT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DVLog_WARNING(input, ...)   func_XLog_Output(XLOGGER_TYPE_DEVELOPMENT,XLOGGER_LEVEL_WARNING,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DVLog_ERROR(input, ...)     func_XLog_Output(XLOGGER_TYPE_DEVELOPMENT,XLOGGER_LEVEL_ERROR,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 
@@ -526,7 +555,7 @@ void  func_XLog_Output(XLOGGER_TYPE paramLogType,
 #define DDLog(input, ...)           func_XLog_Output(XLOGGER_TYPE_DEBUG_DEVELOPMENT,XLOGGER_LEVEL_SIMPLE,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DDLog_NH(input, ...)        func_XLog_Output(XLOGGER_TYPE_DEBUG_DEVELOPMENT,XLOGGER_LEVEL_SIMPLE_NO_HEADER,nil,nil,FILE_NAME,0,input, ##__VA_ARGS__)
 #define DDLog_INFO(input, ...)      func_XLog_Output(XLOGGER_TYPE_DEBUG_DEVELOPMENT,XLOGGER_LEVEL_INFORMATION,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
-#define DDLog_HIGHLIGHT(input, ...) func_XLog_Output(XLOGGER_TYPE_DEBUG_DEVELOPMENT,XLOGGER_LEVEL_HIGHLIGHT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
+#define DDLog_IMPORTANT(input, ...) func_XLog_Output(XLOGGER_TYPE_DEBUG_DEVELOPMENT,XLOGGER_LEVEL_IMPORTANT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DDLog_WARNING(input, ...)   func_XLog_Output(XLOGGER_TYPE_DEBUG_DEVELOPMENT,XLOGGER_LEVEL_WARNING,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define DDLog_ERROR(input, ...)     func_XLog_Output(XLOGGER_TYPE_DEBUG_DEVELOPMENT,XLOGGER_LEVEL_ERROR,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 
@@ -534,7 +563,7 @@ void  func_XLog_Output(XLOGGER_TYPE paramLogType,
 #define OLog(input, ...)           func_XLog_Output(XLOGGER_TYPE_ONLINE_SERVICES,XLOGGER_LEVEL_SIMPLE,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define OLog_NH(input, ...)        func_XLog_Output(XLOGGER_TYPE_ONLINE_SERVICES,XLOGGER_LEVEL_SIMPLE_NO_HEADER,nil,nil,FILE_NAME,0,input, ##__VA_ARGS__)
 #define OLog_INFO(input, ...)      func_XLog_Output(XLOGGER_TYPE_ONLINE_SERVICES,XLOGGER_LEVEL_INFORMATION,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
-#define OLog_HIGHLIGHT(input, ...) func_XLog_Output(XLOGGER_TYPE_ONLINE_SERVICES,XLOGGER_LEVEL_HIGHLIGHT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
+#define OLog_IMPORTANT(input, ...) func_XLog_Output(XLOGGER_TYPE_ONLINE_SERVICES,XLOGGER_LEVEL_IMPORTANT,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define OLog_WARNING(input, ...)   func_XLog_Output(XLOGGER_TYPE_ONLINE_SERVICES,XLOGGER_LEVEL_WARNING,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 #define OLog_ERROR(input, ...)     func_XLog_Output(XLOGGER_TYPE_ONLINE_SERVICES,XLOGGER_LEVEL_ERROR,CALLEE,CALLEE_METHOD,FILE_NAME,LINE_NUMBER,input, ##__VA_ARGS__)
 

@@ -71,7 +71,7 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     switch (paramLogType) {
         case XLOGGER_TYPE_NSLOG_REPLACEMENT:
             [NSException raise:@"XcodeLogger Build Schemes Initializer"
-                        format:@"Do not set a build scheme for XLog!\nThe idea is that XLog is a 1:1 replacement for NSLog's behaviour."];
+                        format:@"Do not set a build scheme for XLog!\nThe idea is that XLog is a scheme independent logger."];
             break;
         case XLOGGER_TYPE_DEBUG_DEVELOPMENT:
             [NSException raise:@"XcodeLogger Build Schemes Initializer"
@@ -138,13 +138,20 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
                       format:(NSString *)paramHeaderFormat
                    arguments:(NSArray *)paramArguments {
     
+    if (paramLogType == XLOGGER_TYPE_ALL) {
+        [NSException raise:@"Xcode Logger Set Log Header Format"
+                    format:@"-[%@] operation is unavailable for XLOGGER_TYPE_ALL.\nSelect a specific Log Type instead.",NSStringFromSelector(_cmd)];
+    }
+    
     switch (paramLogLevel) {
         case XLOGGER_LEVEL_ALL:
         {
             NSArray *logLevels = [XcodeLogger getLogLevelsForLogType:paramLogType];
             for (XLogObject *logLevel in logLevels) {
-                [logLevel setHeaderFormat:paramHeaderFormat];
-                [logLevel setHeaderArguments:paramArguments];
+                if ([logLevel logLevel] != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
+                    [logLevel setHeaderFormat:paramHeaderFormat];
+                    [logLevel setHeaderArguments:paramArguments];
+                }
             }
         }
             break;
@@ -153,7 +160,7 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
         {
             XLogObject *currentLogger = [XcodeLogger getXLogObjectForType:paramLogType
                                                                 withLevel:paramLogLevel];
-
+            
             [currentLogger setHeaderFormat:paramHeaderFormat];
             [currentLogger setHeaderArguments:paramArguments];
         }
@@ -168,18 +175,65 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     switch (paramLogLevel) {
         case XLOGGER_LEVEL_ALL:
             [NSException raise:@"Xcode Logger Set Log Header Description"
-                        format:@"-[setLogHeaderDescription...] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead."];
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead.",NSStringFromSelector(_cmd)];
             break;
         case XLOGGER_LEVEL_SIMPLE_NO_HEADER:
             [NSException raise:@"Xcode Logger Set Log Header Description"
-                        format:@"-[setLogHeaderDescription...] operation is unavailable for XLOGGER_LEVEL_SIMPLE_NO_HEADER.\nSelect another Log Level instead."];
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_SIMPLE_NO_HEADER.\nSelect another Log Level instead.",NSStringFromSelector(_cmd)];
             break;
         default:
         {
-            XLogObject *logObject = [XcodeLogger getXLogObjectForType:paramLogType
-                                                            withLevel:paramLogLevel];
-            
-            [logObject setLogHeaderDescription:paramLogDescription];
+            if (paramLogType == XLOGGER_TYPE_ALL) {
+                NSArray *allLoggers = [XcodeLogger getLogTypesForLogLevel:paramLogLevel];
+                for (XLogObject *logObject in allLoggers) {
+                    if ([logObject logLevel] != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
+                        [logObject setLogHeaderDescription:paramLogDescription];
+                    }
+                }
+            } else {
+                XLogObject *logObject = [XcodeLogger getXLogObjectForType:paramLogType
+                                                                withLevel:paramLogLevel];
+                if ([logObject logLevel] != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
+                    [logObject setLogHeaderDescription:paramLogDescription];
+                }
+            }
+        }
+            break;
+    }
+}
+
+- (void)setLogHeaderDescription:(NSString *)paramLogDescription
+                     forLogType:(XLOGGER_TYPE)paramLogType
+                          level:(XLOGGER_LEVEL)paramLogLevel
+                          color:(XLColor *)paramColor {
+    
+    switch (paramLogLevel) {
+        case XLOGGER_LEVEL_ALL:
+            [NSException raise:@"Xcode Logger Set Log Header Description"
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead.",NSStringFromSelector(_cmd)];
+            break;
+        case XLOGGER_LEVEL_SIMPLE_NO_HEADER:
+            [NSException raise:@"Xcode Logger Set Log Header Description"
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_SIMPLE_NO_HEADER.\nSelect another Log Level instead.",NSStringFromSelector(_cmd)];
+            break;
+        default:
+        {
+            if (paramLogType == XLOGGER_TYPE_ALL) {
+                NSArray *allLoggers = [XcodeLogger getLogTypesForLogLevel:paramLogLevel];
+                for (XLogObject *logObject in allLoggers) {
+                    if ([logObject logLevel] != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
+                        [logObject setLogHeaderDescription:paramLogDescription];
+                        [logObject setColorForLogHeaderDescription:paramColor];
+                    }
+                }
+            } else {
+                XLogObject *logObject = [XcodeLogger getXLogObjectForType:paramLogType
+                                                                withLevel:paramLogLevel];
+                if ([logObject logLevel] != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
+                    [logObject setLogHeaderDescription:paramLogDescription];
+                    [logObject setColorForLogHeaderDescription:paramColor];
+                }
+            }
         }
             break;
     }
@@ -203,7 +257,7 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
         {
             XLogObject *currentLogger = [XcodeLogger getXLogObjectForType:paramLogType
                                                                 withLevel:paramLogLevel];
-
+            
             [currentLogger setNumberOfNewLinesAfterHeader:paramNumberOfLines];
         }
             break;
@@ -254,15 +308,22 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     switch (paramLogLevel) {
         case XLOGGER_LEVEL_ALL:
             [NSException raise:@"Xcode Logger Set Text Color"
-                        format:@"-[setTextColorForXLogType...] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead."];
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead.",NSStringFromSelector(_cmd)];
             break;
             
         default:
         {
-            XLogObject *currentLogger = [XcodeLogger getXLogObjectForType:paramLogType
+            if (paramLogType == XLOGGER_TYPE_ALL) {
+                NSArray *allLoggers = [XcodeLogger getLogTypesForLogLevel:paramLogLevel];
+                for (XLogObject *logObject in allLoggers) {
+                    [logObject setTextColorWithRed:red Green:green Blue:blue];
+                }
+                
+            } else {
+                XLogObject *logObject = [XcodeLogger getXLogObjectForType:paramLogType
                                                                 withLevel:paramLogLevel];
-            
-            [currentLogger setTextColorWithRed:red Green:green Blue:blue];
+                [logObject setTextColorWithRed:red Green:green Blue:blue];
+            }
         }
             break;
     }
@@ -275,15 +336,22 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     switch (paramLogLevel) {
         case XLOGGER_LEVEL_ALL:
             [NSException raise:@"Xcode Logger Set Text Color"
-                        format:@"-[setTextColor:forXLogType:level:] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead."];
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead.",NSStringFromSelector(_cmd)];
             break;
-    
+            
         default:
         {
-            XLogObject *currentLogger = [XcodeLogger getXLogObjectForType:paramLogType
+            if (paramLogType == XLOGGER_TYPE_ALL) {
+                NSArray *allLoggers = [XcodeLogger getLogTypesForLogLevel:paramLogLevel];
+                for (XLogObject *logObject in allLoggers) {
+                    [logObject setTextColor:paramTextColor];
+                }
+                
+            } else {
+                XLogObject *logObject = [XcodeLogger getXLogObjectForType:paramLogType
                                                                 withLevel:paramLogLevel];
-            
-            [currentLogger setTextColor:paramTextColor];
+                [logObject setTextColor:paramTextColor];
+            }
         }
             break;
     }
@@ -298,15 +366,23 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     switch (paramLogLevel) {
         case XLOGGER_LEVEL_ALL:
             [NSException raise:@"Xcode Logger Set Background Color"
-                        format:@"-[setBackgroundColorForXLogType...] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead."];
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead.",NSStringFromSelector(_cmd)];
             break;
             
         default:
         {
-            XLogObject *currentLogger = [XcodeLogger getXLogObjectForType:paramLogType
+            if (paramLogType == XLOGGER_TYPE_ALL) {
+                NSArray *allLoggers = [XcodeLogger getLogTypesForLogLevel:paramLogLevel];
+                for (XLogObject *logObject in allLoggers) {
+                    [logObject setBackgroundColorWithRed:red Green:green Blue:blue];
+                }
+                
+            } else {
+                XLogObject *logObject = [XcodeLogger getXLogObjectForType:paramLogType
                                                                 withLevel:paramLogLevel];
+                [logObject setBackgroundColorWithRed:red Green:green Blue:blue];
+            }
             
-            [currentLogger setBackgroundColorWithRed:red Green:green Blue:blue];
         }
             break;
     }
@@ -319,15 +395,22 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     switch (paramLogLevel) {
         case XLOGGER_LEVEL_ALL:
             [NSException raise:@"Xcode Logger Set Background Color"
-                        format:@"-[setBackgroundColor:forXLogType:level:] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead."];
+                        format:@"-[%@] operation is unavailable for XLOGGER_LEVEL_ALL.\nSelect a specific Log Level instead.",NSStringFromSelector(_cmd)];
             break;
             
         default:
         {
-            XLogObject *currentLogger = [XcodeLogger getXLogObjectForType:paramLogType
+            if (paramLogType == XLOGGER_TYPE_ALL) {
+                NSArray *allLoggers = [XcodeLogger getLogTypesForLogLevel:paramLogLevel];
+                for (XLogObject *logObject in allLoggers) {
+                    [logObject setBackgroundColor:paramBackgroundColor];
+                }
+                
+            } else {
+                XLogObject *logObject = [XcodeLogger getXLogObjectForType:paramLogType
                                                                 withLevel:paramLogLevel];
-            
-            [currentLogger setBackgroundColor:paramBackgroundColor];
+                [logObject setBackgroundColor:paramBackgroundColor];
+            }
         }
             break;
     }
@@ -340,7 +423,7 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
 }
 
 - (void)loadColorThemeWithName:(NSString *)paramColorThemeName {
-      [[XLColorThemes sharedManager] loadColorThemeWithName:paramColorThemeName];
+    [[XLColorThemes sharedManager] loadColorThemeWithName:paramColorThemeName];
 }
 
 - (void)printAvailableColorThemes {
@@ -356,8 +439,8 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
 + (BOOL)checkXcodeColorsPluginIsEnabled {
     BOOL enabled;
     
-        char *xcode_colors = getenv("XcodeColors");
-        enabled = xcode_colors && (strcmp(xcode_colors, "YES") == 0) ? YES:NO;
+    char *xcode_colors = getenv("XcodeColors");
+    enabled = xcode_colors && (strcmp(xcode_colors, "YES") == 0) ? YES:NO;
     
     return enabled;
 }
@@ -488,9 +571,9 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
 
 + (XLogObject *)getXLogObjectForType:(XLOGGER_TYPE)paramLogType
                            withLevel:(XLOGGER_LEVEL)paramLogLevel {
-
+    
     NSString *key = [[XLogObject stringFromLogType:paramLogType]stringByAppendingString:[XLogObject stringFromLogLevel:paramLogLevel]];
-
+    
     NSMutableDictionary *xLogInstances = [XcodeLogger sharedManager].xLogInstances;
     
     if (![xLogInstances objectForKey:key]) {
@@ -498,6 +581,7 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
                                                               level:paramLogLevel
                                                       colorsEnabled:COLORS_ENABLED];
         [xLogInstances setObject:logObject forKey:key];
+        XL_HEADER_LOG_DESCRIPTION = logObject.logHeaderDescription;
         return [xLogInstances objectForKey:key];
     } else {
         XLogObject *logObject = [xLogInstances objectForKey:key];
@@ -506,6 +590,34 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     }
     
     return nil;
+}
+
++ (NSArray *)getLogTypesForLogLevel:(XLOGGER_LEVEL)paramLogLevel {
+    
+    if (paramLogLevel == XLOGGER_LEVEL_ALL) {
+        NSArray *allLoggers = @[[self getLogTypesForLogLevel:XLOGGER_LEVEL_SIMPLE],
+                                [self getLogTypesForLogLevel:XLOGGER_LEVEL_SIMPLE_NO_HEADER],
+                                [self getLogTypesForLogLevel:XLOGGER_LEVEL_INFORMATION],
+                                [self getLogTypesForLogLevel:XLOGGER_LEVEL_IMPORTANT],
+                                [self getLogTypesForLogLevel:XLOGGER_LEVEL_WARNING],
+                                [self getLogTypesForLogLevel:XLOGGER_LEVEL_ERROR]];
+        return allLoggers;
+    }
+    
+    
+    XLogObject *XLog  = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_NSLOG_REPLACEMENT
+                                                withLevel:paramLogLevel];
+    XLogObject *DLog  = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_DEBUG
+                                                withLevel:paramLogLevel];
+    XLogObject *DVLog = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_DEVELOPMENT
+                                                withLevel:paramLogLevel];
+    XLogObject *DDLog = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_DEBUG_DEVELOPMENT
+                                                withLevel:paramLogLevel];
+    XLogObject *OLog  = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_ONLINE_SERVICES
+                                                withLevel:paramLogLevel];
+    
+    NSArray *logTypes = @[XLog, DLog, DVLog, DDLog, OLog];
+    return logTypes;
 }
 
 + (NSArray *)getLogLevelsForLogType:(XLOGGER_TYPE)paramLogType
@@ -525,16 +637,20 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
                                                            withLevel:XLOGGER_LEVEL_SIMPLE_NO_HEADER];
     XLogObject *level_INFO       = [XcodeLogger getXLogObjectForType:paramLogType
                                                            withLevel:XLOGGER_LEVEL_INFORMATION];
-    XLogObject *level_HIGHLIGHT  = [XcodeLogger getXLogObjectForType:paramLogType
-                                                           withLevel:XLOGGER_LEVEL_HIGHLIGHT];
+    XLogObject *level_IMPORTANT  = [XcodeLogger getXLogObjectForType:paramLogType
+                                                           withLevel:XLOGGER_LEVEL_IMPORTANT];
     XLogObject *level_WARNING    = [XcodeLogger getXLogObjectForType:paramLogType
                                                            withLevel:XLOGGER_LEVEL_WARNING];
     XLogObject *level_ERROR      = [XcodeLogger getXLogObjectForType:paramLogType
                                                            withLevel:XLOGGER_LEVEL_ERROR];
-    NSArray *loggers = @[level_Simple,level_NH,level_INFO,
-                         level_HIGHLIGHT,level_WARNING,level_ERROR];
+    NSArray *logLevels = @[level_Simple,
+                           level_NH,
+                           level_INFO,
+                           level_IMPORTANT,
+                           level_WARNING,
+                           level_ERROR];
     
-    return loggers;
+    return logLevels;
 }
 
 + (BOOL)filterOutputForXLogLevel:(NSNumber *)paramLogLevel
@@ -562,7 +678,7 @@ static bool isFirstAccess = YES;
 + (XcodeLogger *)sharedManager {
     
     static dispatch_once_t onceToken;
-
+    
     dispatch_once(&onceToken, ^{
         isFirstAccess = NO;
         
@@ -572,7 +688,7 @@ static bool isFirstAccess = YES;
         
         [_sharedInstance loadColorThemeWithName:XLCT_DEFAULT_LIGHT_THEME];
     });
-
+    
     return _sharedInstance;
 }
 
@@ -648,7 +764,7 @@ void setHeaderArguments (id callee,
     }
     // an exception for _NH to support per file filters
     XL_HEADER_FILE_NAME     = [[NSString stringWithUTF8String:fileName] lastPathComponent];
-
+    
 }
 
 void  func_XLog_Output(XLOGGER_TYPE  paramLogType,
@@ -661,7 +777,7 @@ void  func_XLog_Output(XLOGGER_TYPE  paramLogType,
 {
     
     @autoreleasepool {
-
+        
         XLogObject *currentLogger = [XcodeLogger getXLogObjectForType:paramLogType
                                                             withLevel:paramLogLevel];
         
@@ -682,13 +798,13 @@ void  func_XLog_Output(XLOGGER_TYPE  paramLogType,
                         error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <DVLog>!\nSet one using \"-[setBuildSchemeName:forXLogType:]\""];
                         break;
                     default:
-                        error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <%@>! Set one using \"-[setBuildSchemeName:forXLogType:]\"", currentLogger.logTypeString];
+                        error = [NSString stringWithFormat:@"NO BUILD SCHEME WAS DEFINED FOR <%@>! Set one using \"-[setBuildSchemeName:forXLogType:]\"", currentLogger.logDescription];
                         break;
                 }
                 XLog_NH(@"%@", [XcodeLogger xLogFormattedStringFromString:error withColorFormat:nil]);
                 return;
             }
-
+            
             outputAllowed = [XcodeLogger currentRunningSchemeMatches:currentLogger.buildScheme
                                                          forXLogType:paramLogType];
         }
@@ -710,7 +826,6 @@ void  func_XLog_Output(XLOGGER_TYPE  paramLogType,
             XLOG_OUTPUT_STRING = [[NSString alloc] initWithFormat:inputBody arguments:args];
             
             va_end(args);
-            
             NSString *header   = [XcodeLogger populateFormatString:currentLogger.headerFormat
                                                      withArguments:currentLogger.headerArguments];
             

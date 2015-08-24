@@ -30,51 +30,12 @@
 #import "XLColorThemes.h"
 
 #define XLog_Key(x)  [NSNumber numberWithUnsignedInt:x]
+#define key_RGB_Red   @"red"
+#define key_RGB_Green @"green"
+#define key_RGB_Blue  @"blue"
 
 static NSString *const DEFAULT_HEADER_FORMAT             = @"(%@)=> [>%@<]:%@:[#%@]:[> %@ <]";
 static NSString *const DEFAULT_HEADER_FORMAT_SCHEME_LOGS = @"[%@](%@)=> [>%@<]:%@:[#%@]:[> %@ <]";
-
-static NSString *const DEFAULT_TEXT_COLOR_NO_BACKGROUND = @"fg0,0,255;";
-
-static NSString *const DEFAULT_TEXT_COLOR_INFO_LEVEL = @"fg255,255,255;";
-static NSString *const DEFAULT_BGRD_COLOR_INFO_LEVEL = @"bg204,0,204;";
-
-static NSString *const DEFAULT_TEXT_COLOR_HIGHLIGHT_LEVEL = @"fg255,255,255;";
-static NSString *const DEFAULT_BGRD_COLOR_HIGHLIGHT_LEVEL = @"bg0,102,51;";
-
-static NSString *const DEFAULT_TEXT_COLOR_WARNING_LEVEL = @"fg0,0,0;";
-static NSString *const DEFAULT_BGRD_COLOR_WARNING_LEVEL = @"bg255,255,0;";
-
-static NSString *const DEFAULT_TEXT_COLOR_ERROR_LEVEL = @"fg255,255,255;";
-static NSString *const DEFAULT_BGRD_COLOR_ERROR_LEVEL = @"bg255,0,0;";
-
-static NSString *const DEFAULT_STATUS_TEXT_COLOR_WARNING = @"bg255,98,0;";
-
-static NSString *const STATUS_DLOG_SIMPLE    = @"DEBUG";
-static NSString *const STATUS_DLOG_INFO      = @"DEBUG:INFO";
-static NSString *const STATUS_DLOG_HIGHLIGHT = @"DEBUG:STATUS";
-static NSString *const STATUS_DLOG_WARNING   = @"DEBUG:WARNING";
-static NSString *const STATUS_DLOG_ERROR     = @"DEBUG:ERROR";
-
-static NSString *const STATUS_DVLOG_SIMPLE    = @"DEVELOPMENT";
-static NSString *const STATUS_DVLOG_INFO      = @"DEVELOPMENT:INFO";
-static NSString *const STATUS_DVLOG_HIGHLIGHT = @"DEVELOPMENT:STATUS";
-static NSString *const STATUS_DVLOG_WARNING   = @"DEVELOPMENT:WARNING";
-static NSString *const STATUS_DVLOG_ERROR     = @"DEVELOPMENT:ERROR";
-
-static NSString *const STATUS_DDLOG_SIMPLE    = @"DBG&DEV";
-static NSString *const STATUS_DDLOG_INFO      = @"DBG&DEV:INFO";
-static NSString *const STATUS_DDLOG_HIGHLIGHT = @"DBG&DEV:STATUS";
-static NSString *const STATUS_DDLOG_WARNING   = @"DBG&DEV:WARNING";
-static NSString *const STATUS_DDLOG_ERROR     = @"DBG&DEV:ERROR";
-
-static NSString *const STATUS_OLOG_SIMPLE    = @"ONLINE";
-static NSString *const STATUS_OLOG_INFO      = @"ONLINE:INFO";
-static NSString *const STATUS_OLOG_HIGHLIGHT = @"ONLINE:STATUS";
-static NSString *const STATUS_OLOG_WARNING   = @"ONLINE:WARNING";
-static NSString *const STATUS_OLOG_ERROR     = @"ONLINE:ERROR";
-
-static NSString *const key_Status_Color = @"status_color";
 
 @interface XLogObject ()
 {
@@ -87,7 +48,7 @@ static NSString *const key_Status_Color = @"status_color";
 @property (nonatomic, strong) XLColorThemes *colorThemesManager;
 
 @property (nonatomic, readwrite) NSString *logHeaderDescription;
-@property (nonatomic, readwrite) NSString *logTypeString;
+@property (nonatomic, readwrite) NSString *logDescription;
 @property (nonatomic, readwrite) NSString *buildScheme;
 @property (nonatomic, readwrite) NSString *outputColor;
 @property (nonatomic, readwrite) NSString *newlinesAfterHeader;
@@ -95,6 +56,9 @@ static NSString *const key_Status_Color = @"status_color";
 
 @property (nonatomic, copy) NSString *textColorFormat;
 @property (nonatomic, copy) NSString *backgroundColorFormat;
+
+@property (nonatomic, copy) NSString *logHeaderDescriptionMessageString;
+@property (nonatomic, copy) NSString *logHeaderDescriptionColorFormat;
 
 @property (nonatomic, copy) NSDictionary *colorThemeDictionary;
 
@@ -104,13 +68,16 @@ static NSString *const key_Status_Color = @"status_color";
 
 @implementation XLogObject
 
-@synthesize logHeaderDescription = _logHeaderDescription;
+
+/* ------------------ */
+#pragma mark - PUBLIC
+/* ------------------ */
+
 
 #pragma mark - Init
-
 - (instancetype)init {
     [NSException raise:@"XLogObject Safe Initialization"
-                format:@"Use -[initWithLogType:level:] instead of -[init]!"];
+                format:@"Use -[initWithLogType:level:colorsEnabled:] instead of -[init]."];
     return nil;
 }
 
@@ -120,169 +87,55 @@ static NSString *const key_Status_Color = @"status_color";
     
     if (self = [super init]) {
         
-        _logType  = paramLogType;
-        _logLevel = paramLogLevel;
-        _logTypeString = [[self.class stringFromLogType: _logType]stringByAppendingString:[self.class stringFromLogLevel:_logLevel]];
-        _colorsEnabled = paramColorsEnabled;
+        _logType        = paramLogType;
+        _logLevel       = paramLogLevel;
+        _logDescription = [self stringFromLogType:_logType level:_logLevel];
+        _colorsEnabled  = paramColorsEnabled;
         
-        self.colorThemesManager   = [XLColorThemes sharedManager];
-        self.colorThemeDictionary = [self.colorThemesManager getColorThemeForType: _logType];
-        
-        _newlinesAfterHeader = @"\n";
-        _newlinesAfterOutput = @"\n\n";
-        
-        switch (paramLogType) {
-            case XLOGGER_TYPE_NSLOG_REPLACEMENT:
-            {
-                if (paramLogLevel != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
-                    _headerFormat    = DEFAULT_HEADER_FORMAT;
-                    _headerArguments = @[XL_ARG_TIMESTAMP,
-                                         XL_ARG_CALLEE_ADDRESS,
-                                         XL_ARG_FILE_NAME,
-                                         XL_ARG_LINE_NUMBER,
-                                         XL_ARG_CALLEE_METHOD];
-                }
-            }
-                break;
-            default:
-            {
-                if (paramLogLevel != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
-                    _headerFormat    = DEFAULT_HEADER_FORMAT_SCHEME_LOGS;
-                    _headerArguments = @[[self defaultStatusMessageForLogType:paramLogType
-                                                                        level:paramLogLevel],
-                                         XL_ARG_TIMESTAMP,
-                                         XL_ARG_CALLEE_ADDRESS,
-                                         XL_ARG_FILE_NAME,
-                                         XL_ARG_LINE_NUMBER,
-                                         XL_ARG_CALLEE_METHOD];
-                }
-            }
-                break;
-        }
-        
-        if (_logType == XLOGGER_TYPE_DEBUG_DEVELOPMENT) {
-            _buildScheme = @"sharedScheme";
-        }
+        [self loadDefaults];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(colorThemeDidChange)
                                                      name:XL_THEME_DID_CHANGE_NOTIFICATION
-                                                   object:self.colorThemesManager];
+                                                   object:_colorThemesManager];
     }
     return self;
 }
 
-#pragma mark - PUBLIC
 
 #pragma mark Scheme Linking
 - (void)setBuildScheme:(NSString *)buildScheme {
     _buildScheme = buildScheme;
 }
 
-#pragma mark Informations
-- (XLOGGER_TYPE)logType {
-    return _logType;
-}
-
-- (XLOGGER_LEVEL)logLevel {
-    return _logLevel;
-}
-
-#pragma mark Colors
-- (NSString *)outputColor {
-    _outputColor = [self outputColorForLevel:_logLevel];
-    return _outputColor;
-}
-
-- (void)setTextColorWithRed:(NSUInteger)red
-                      Green:(NSUInteger)green
-                       Blue:(NSUInteger)blue
-{
-    [self setOutputColor:nil];
-    self.textColorFormat = [NSString stringWithFormat:@"fg%tu,%tu,%tu;",red,green,blue];
-}
-
-- (void)setTextColor:(XLColor *)paramTextColor
-{
-    if (paramTextColor) {
-        
-        NSString *UIColorClass = @"UIColor";
-        
-        if ([paramTextColor isKindOfClass:[NSClassFromString(UIColorClass) class]]) {
-            
-            CGFloat red, green, blue;
-            [paramTextColor getRed:&red green:&green blue:&blue alpha:NULL];
-            
-            [self setTextColorWithRed:(NSUInteger)(red   * 255.0)
-                                Green:(NSUInteger)(green * 255.0)
-                                 Blue:(NSUInteger)(blue  * 255.0)];
-        } else {
-#if !TARGET_OS_IPHONE
-            NSColor *color = [paramTextColor colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
-            
-            NSUInteger red, green, blue;
-            
-            red   = (NSUInteger)([color redComponent]   * 255.0);
-            green = (NSUInteger)([color greenComponent] * 255.0);
-            blue  = (NSUInteger)([color blueComponent]  * 255.0);
-            
-            [self setTextColorWithRed:red Green:green Blue:blue];
-#endif
-        }
-    }//if (paramTextColor) {
-}
-
-- (void)setBackgroundColorWithRed:(NSUInteger)red
-                            Green:(NSUInteger)green
-                             Blue:(NSUInteger)blue
-{
-    [self setOutputColor:nil];
-    self.backgroundColorFormat = [NSString stringWithFormat:@"bg%tu,%tu,%tu;",red,green,blue];
-}
-
-- (void)setBackgroundColor:(XLColor *)paramBackgroundColor
-{
-    if (paramBackgroundColor) {
-        NSString *UIColorClassString = @"UIColor";
-        Class UIColorClass = NSClassFromString(UIColorClassString);
-        
-        if ([paramBackgroundColor isKindOfClass:[UIColorClass class]]) {
-            
-            CGFloat red, green, blue;
-            [paramBackgroundColor getRed:&red green:&green blue:&blue alpha:NULL];
-            
-            [self setBackgroundColorWithRed:(NSUInteger)(red   * 255.0)
-                                      Green:(NSUInteger)(green * 255.0)
-                                       Blue:(NSUInteger)(blue  * 255.0)];
-        } else {
-#if !TARGET_OS_IPHONE
-            NSColor *color = [paramBackgroundColor colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
-            
-            NSUInteger red, green, blue;
-            
-            red   = (NSUInteger)([color redComponent]   * 255.0);
-            green = (NSUInteger)([color greenComponent] * 255.0);
-            blue  = (NSUInteger)([color blueComponent]  * 255.0);
-            
-            [self setBackgroundColorWithRed:red Green:green Blue:blue];
-#endif
-        }
-    }//if (paramBackgroundColor) {
-}
-
 
 #pragma mark Format
+@synthesize logHeaderDescription = _logHeaderDescription;
+
 
 - (NSString *)logHeaderDescription {
-    if (!_logHeaderDescription) {
-        _logHeaderDescription = [self defaultStatusMessageForLogType:_logType
-                                                               level:_logLevel];
+    //make sure the colors are fresh & loaded in case something changed
+    if (!_logHeaderDescriptionColorFormat) {
+        [self outputColor];
     }
+    
+    //load a default message if nothing is customized
+    if (!_logHeaderDescription) {
+        _logHeaderDescription = [self defaultLogDescriptionForLogType:_logType
+                                                                level:_logLevel];
+    } else {
+        //colorize the custom description
+        _logHeaderDescription = [self colorFormattedStringFromString:self.logHeaderDescriptionMessageString
+                                                     withColorFormat:self.logHeaderDescriptionColorFormat];
+    }
+    
+    
     return _logHeaderDescription;
 }
 
 - (void)setLogHeaderDescription:(NSString *)paramLogDescription {
-    _logHeaderDescription = paramLogDescription;
+    //store the non-colored version of the custom description
+    _logHeaderDescriptionMessageString = paramLogDescription;
 }
 
 -(void)setNumberOfNewLinesAfterHeader:(NSUInteger)numberOfNewLinesAfterHeader
@@ -308,6 +161,83 @@ static NSString *const key_Status_Color = @"status_color";
         }
     }
 }
+
+
+#pragma mark Colors
+- (NSString *)outputColor {
+    if (!_outputColor) {
+        _outputColor = [self setColorsForLevel: _logLevel];
+    }
+    return _outputColor;
+}
+
+- (void)setTextColorWithRed:(NSUInteger)red
+                      Green:(NSUInteger)green
+                       Blue:(NSUInteger)blue
+{
+    [self setOutputColor:nil];
+    self.textColorFormat = [NSString stringWithFormat:@"fg%tu,%tu,%tu;",red,green,blue];
+}
+
+- (void)setTextColor:(XLColor *)paramTextColor
+{
+    if (paramTextColor) {
+        NSDictionary *RGBValues = [self RGBColorsFromXLColor:paramTextColor];
+        [self setTextColorWithRed:[RGBValues[key_RGB_Red]   unsignedIntegerValue]
+                            Green:[RGBValues[key_RGB_Green] unsignedIntegerValue]
+                             Blue:[RGBValues[key_RGB_Blue]  unsignedIntegerValue]];
+    }
+    else {
+        self.outputColor = nil;
+        self.textColorFormat = nil;
+    }
+}
+
+- (void)setBackgroundColorWithRed:(NSUInteger)red
+                            Green:(NSUInteger)green
+                             Blue:(NSUInteger)blue
+{
+    [self setOutputColor:nil];
+    self.backgroundColorFormat = [NSString stringWithFormat:@"bg%tu,%tu,%tu;",red,green,blue];
+}
+
+- (void)setBackgroundColor:(XLColor *)paramBackgroundColor
+{
+    if (paramBackgroundColor) {
+        
+        NSDictionary *RGBValues = [self RGBColorsFromXLColor:paramBackgroundColor];
+        [self setBackgroundColorWithRed:[RGBValues[key_RGB_Red]   unsignedIntegerValue]
+                                  Green:[RGBValues[key_RGB_Green] unsignedIntegerValue]
+                                   Blue:[RGBValues[key_RGB_Blue]  unsignedIntegerValue]];
+    }
+    else {
+        self.outputColor = nil;
+        self.backgroundColorFormat = nil;
+    }
+}
+
+- (void)setColorForLogHeaderDescription:(XLColor *)paramColor {
+    
+    NSDictionary *RGBValues = [self RGBColorsFromXLColor:paramColor];
+    if (RGBValues) {
+        self.logHeaderDescriptionColorFormat = [NSString stringWithFormat:@"fg%tu,%tu,%tu;",
+                                                [RGBValues[key_RGB_Red]   unsignedIntegerValue],
+                                                [RGBValues[key_RGB_Green] unsignedIntegerValue],
+                                                [RGBValues[key_RGB_Blue]  unsignedIntegerValue]];
+    } else {
+        self.logHeaderDescriptionColorFormat = nil;
+    }
+}
+
+#pragma mark Informations
+- (XLOGGER_TYPE)logType {
+    return _logType;
+}
+
+- (XLOGGER_LEVEL)logLevel {
+    return _logLevel;
+}
+
 
 #pragma mark Helpers
 + (NSString *)stringFromLogType:(XLOGGER_TYPE)paramLogType {
@@ -346,8 +276,8 @@ static NSString *const key_Status_Color = @"status_color";
         case XLOGGER_LEVEL_INFORMATION:
             return @"_LEVEL_INFORMATION";
             break;
-        case XLOGGER_LEVEL_HIGHLIGHT:
-            return @"_LEVEL_HIGHLIGHT";
+        case XLOGGER_LEVEL_IMPORTANT:
+            return @"_LEVEL_IMPORTANT";
             break;
         case XLOGGER_LEVEL_WARNING:
             return @"_LEVEL_WARNING";
@@ -362,19 +292,63 @@ static NSString *const key_Status_Color = @"status_color";
 }
 
 
+/* ------------------ */
 #pragma mark - PRIVATE
+/* ------------------ */
 
-#pragma mark XLColorThemes Notifications
-- (void)colorThemeDidChange {
-    self.colorThemeDictionary = [self.colorThemesManager getColorThemeForType: _logType];
-    self.outputColor = nil;
-    self.textColorFormat = nil;
-    self.backgroundColorFormat = nil;
+
+#pragma mark Init
+- (void)loadDefaults {
+    _colorThemesManager   = [XLColorThemes sharedManager];
+    _colorThemeDictionary = [_colorThemesManager getColorThemeForType: _logType];
+    
+    _newlinesAfterHeader = @"\n";
+    _newlinesAfterOutput = @"\n\n";
+    
+    if (_logType == XLOGGER_TYPE_DEBUG_DEVELOPMENT) {
+        _buildScheme = @"sharedScheme";
+    }
+    
+    self.outputColor = [self setColorsForLevel:_logLevel];
+    [self loadDefaultInformationHeader];
+}
+
+- (void)loadDefaultInformationHeader {
+    if (_logType == XLOGGER_TYPE_NSLOG_REPLACEMENT) {
+        if (_logLevel != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
+            _headerFormat    = DEFAULT_HEADER_FORMAT;
+            _headerArguments = @[XL_ARG_TIMESTAMP,
+                                 XL_ARG_CALLEE_ADDRESS,
+                                 XL_ARG_FILE_NAME,
+                                 XL_ARG_LINE_NUMBER,
+                                 XL_ARG_CALLEE_METHOD];
+            
+        }
+    } else {
+        if (_logLevel != XLOGGER_LEVEL_SIMPLE_NO_HEADER) {
+            _headerFormat    = DEFAULT_HEADER_FORMAT_SCHEME_LOGS;
+            _headerArguments = @[XL_ARG_LOG_DESCRIPTION,
+                                 XL_ARG_TIMESTAMP,
+                                 XL_ARG_CALLEE_ADDRESS,
+                                 XL_ARG_FILE_NAME,
+                                 XL_ARG_LINE_NUMBER,
+                                 XL_ARG_CALLEE_METHOD];
+        }
+    }
     
 }
 
+#pragma mark XLColorThemes Notifications
+- (void)colorThemeDidChange {
+    self.colorThemeDictionary  = [self.colorThemesManager getColorThemeForType: _logType];
+    self.outputColor           = nil;
+    self.textColorFormat       = nil;
+    self.backgroundColorFormat = nil;
+ //   self.logHeaderDescriptionColorFormat = nil;
+}
+
 #pragma mark Colors
-- (void)loadDefaultColorThemeForLevel:(XLOGGER_LEVEL)paramLogLevel {
+- (NSDictionary *)RGBColorsFromString:(NSString *)paramColorString {
     
     static NSCharacterSet *decimalCharset;
     if (!decimalCharset) {
@@ -387,39 +361,52 @@ static NSString *const key_Status_Color = @"status_color";
         [separatorCharset formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
     }
     
-    if (self.colorThemeDictionary) {
-        NSString *logLevel        = [self.colorThemesManager keyFromLogLevel:paramLogLevel];
+    if ([paramColorString rangeOfCharacterFromSet:decimalCharset].location != NSNotFound) {
+        NSArray *RGBValues = [paramColorString componentsSeparatedByCharactersInSet:separatorCharset];
         
-        NSString *textColorString = self.colorThemeDictionary[logLevel][key_XLCOLORTHEMES_TEXT];
-        NSString *bgndColorString = self.colorThemeDictionary[logLevel][key_XLCOLORTHEMES_BACKGROUND];
+        NSNumber *red   = [NSNumber numberWithUnsignedInteger:(NSUInteger)[RGBValues[0] integerValue]];
+        NSNumber *green = [NSNumber numberWithUnsignedInteger:(NSUInteger)[RGBValues[1] integerValue]];
+        NSNumber *blue  = [NSNumber numberWithUnsignedInteger:(NSUInteger)[RGBValues[2] integerValue]];
         
-        if ([textColorString rangeOfCharacterFromSet:decimalCharset].location != NSNotFound) {
+        NSDictionary *RGBColorsDictionary = @{key_RGB_Red:red,key_RGB_Green:green,key_RGB_Blue:blue};
+        return RGBColorsDictionary;
+    }
+    return nil;
+}
+
+- (NSDictionary *)RGBColorsFromXLColor:(XLColor *)paramColor {
+    
+    NSDictionary *RGBDictionary;
+    
+    if (paramColor) {
+        NSString *UIColorClassString = @"UIColor";
+        Class UIColorClass = NSClassFromString(UIColorClassString);
+        
+        if ([paramColor isKindOfClass:[UIColorClass class]]) {
             
-            NSArray *RGBValues = [textColorString componentsSeparatedByCharactersInSet:separatorCharset];
+            CGFloat red, green, blue;
+            [paramColor getRed:&red green:&green blue:&blue alpha:NULL];
             
-            NSUInteger red   = (NSUInteger)[RGBValues[0] integerValue];
-            NSUInteger green = (NSUInteger)[RGBValues[1] integerValue];
-            NSUInteger blue  = (NSUInteger)[RGBValues[2] integerValue];
-            
-            [self setTextColorWithRed:red Green:green Blue:blue];
+            RGBDictionary = @{key_RGB_Red  :[NSNumber numberWithUnsignedInteger:(NSUInteger)(red   * 255.0)],
+                              key_RGB_Green:[NSNumber numberWithUnsignedInteger:(NSUInteger)(green * 255.0)],
+                              key_RGB_Blue :[NSNumber numberWithUnsignedInteger:(NSUInteger)(blue  * 255.0)]};
         } else {
-            XLColor *textColor = [self colorFromString:textColorString];
-            [self setTextColor:textColor];
-        }
-        
-        if ([bgndColorString rangeOfCharacterFromSet:decimalCharset].location != NSNotFound) {
-            NSArray *RGBValues = [bgndColorString componentsSeparatedByCharactersInSet:separatorCharset];
+#if !TARGET_OS_IPHONE
+            NSColor *color = [paramColor colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
             
-            NSUInteger red   = (NSUInteger)[RGBValues[0] integerValue];
-            NSUInteger green = (NSUInteger)[RGBValues[1] integerValue];
-            NSUInteger blue  = (NSUInteger)[RGBValues[2] integerValue];
+            NSUInteger red, green, blue;
             
-            [self setBackgroundColorWithRed:red Green:green Blue:blue];
-        } else {
-            XLColor *bgndColor = [self colorFromString:bgndColorString];
-            [self setBackgroundColor:bgndColor];
+            red   = (NSUInteger)([color redComponent]   * 255.0);
+            green = (NSUInteger)([color greenComponent] * 255.0);
+            blue  = (NSUInteger)([color blueComponent]  * 255.0);
+            
+            RGBDictionary = @{key_RGB_Red  :[NSNumber numberWithUnsignedInteger:red],
+                              key_RGB_Green:[NSNumber numberWithUnsignedInteger:green],
+                              key_RGB_Blue :[NSNumber numberWithUnsignedInteger:blue]};
+#endif
         }
     }
+    return RGBDictionary;
 }
 
 - (XLColor *)colorFromString:(NSString *)paramColorString {
@@ -433,12 +420,49 @@ static NSString *const key_Status_Color = @"status_color";
     return nil;
 }
 
-- (NSString *)outputColorForLevel:(XLOGGER_LEVEL)paramLogLevel
+- (NSString *)convertBackgroundColorToText:(NSString *)colorString {
+    return [colorString stringByReplacingOccurrencesOfString:@"bg"
+                                                  withString:@"fg"];
+}
+
+- (void)loadColorThemeForLevel:(XLOGGER_LEVEL)paramLogLevel {
+    
+    if (self.colorThemeDictionary) {
+        NSString *logLevel        = [self.colorThemesManager keyFromLogLevel:paramLogLevel];
+        NSString *textColorString = self.colorThemeDictionary[logLevel][key_XLCOLORTHEMES_TEXT];
+        NSString *bgndColorString = self.colorThemeDictionary[logLevel][key_XLCOLORTHEMES_BACKGROUND];
+        
+        NSDictionary *textColorDictionary = [self RGBColorsFromString:textColorString];
+        NSDictionary *bgndColorDictionary = [self RGBColorsFromString:bgndColorString];
+        
+        if (textColorDictionary) {
+            [self setTextColorWithRed:[textColorDictionary[key_RGB_Red]   unsignedIntegerValue]
+                                Green:[textColorDictionary[key_RGB_Green] unsignedIntegerValue]
+                                 Blue:[textColorDictionary[key_RGB_Blue]  unsignedIntegerValue]];
+        } else {
+            XLColor *textColor = [self colorFromString:textColorString];
+            [self setTextColor:textColor];
+        }
+        
+        if (bgndColorDictionary) {
+            [self setBackgroundColorWithRed:[bgndColorDictionary[key_RGB_Red]   unsignedIntegerValue]
+                                      Green:[bgndColorDictionary[key_RGB_Green] unsignedIntegerValue]
+                                       Blue:[bgndColorDictionary[key_RGB_Blue]  unsignedIntegerValue]];
+        } else {
+            XLColor *bgndColor = [self colorFromString:bgndColorString];
+            [self setBackgroundColor:bgndColor];
+        }
+    }
+}
+
+- (NSString *)setColorsForLevel:(XLOGGER_LEVEL)paramLogLevel
 {
     if (self.colorsEnabled) {
         
+        //if there are no colors loaded for both text and background
         if (!self.textColorFormat && !self.backgroundColorFormat) {
-            [self loadDefaultColorThemeForLevel:paramLogLevel];
+            //(re)load the color theme
+            [self loadColorThemeForLevel:paramLogLevel];
         }
         
         if (self.textColorFormat && self.backgroundColorFormat) {
@@ -454,89 +478,69 @@ static NSString *const key_Status_Color = @"status_color";
         }
         
     }
-    
     return nil;
 }
 
 
-- (NSString *)convertBackgroundColorToText:(NSString *)colorString
-{
-    return [colorString stringByReplacingOccurrencesOfString:@"bg"
-                                                  withString:[NSString stringWithFormat:@"%@fg",XCODE_COLORS_ESCAPE]];
-}
-
 #pragma mark Log Status
-- (NSDictionary *)getDefaultStatusInformations {
+- (NSDictionary *)defaultLogDescriptionMessages {
     
     static NSDictionary *defaultStatusInformations;
     
     if (!defaultStatusInformations) {
-        NSDictionary *logLevelsStatusColors;
-        logLevelsStatusColors = @{XLog_Key(XLOGGER_LEVEL_INFORMATION):
-                                      DEFAULT_BGRD_COLOR_INFO_LEVEL,
-                                  XLog_Key(XLOGGER_LEVEL_HIGHLIGHT)  :
-                                      DEFAULT_BGRD_COLOR_HIGHLIGHT_LEVEL,
-                                  XLog_Key(XLOGGER_LEVEL_WARNING)    :
-                                      DEFAULT_STATUS_TEXT_COLOR_WARNING,
-                                  XLog_Key(XLOGGER_LEVEL_ERROR)      :
-                                      DEFAULT_BGRD_COLOR_ERROR_LEVEL
-                                  };
-        
         NSDictionary *dLogLevelsStatusMessages;
         dLogLevelsStatusMessages = @{XLog_Key(XLOGGER_LEVEL_SIMPLE)     :
-                                         STATUS_DLOG_SIMPLE,
+                                         @"DEBUG",
                                      XLog_Key(XLOGGER_LEVEL_INFORMATION):
-                                         STATUS_DLOG_INFO,
-                                     XLog_Key(XLOGGER_LEVEL_HIGHLIGHT)  :
-                                         STATUS_DLOG_HIGHLIGHT,
+                                         @"DEBUG:INFO",
+                                     XLog_Key(XLOGGER_LEVEL_IMPORTANT)  :
+                                         @"DEBUG:IMPORTANT",
                                      XLog_Key(XLOGGER_LEVEL_WARNING)    :
-                                         STATUS_DLOG_WARNING,
+                                         @"DEBUG:WARNING",
                                      XLog_Key(XLOGGER_LEVEL_ERROR)      :
-                                         STATUS_DLOG_ERROR
+                                         @"DEBUG:ERROR"
                                      };
         
         NSDictionary *dvLogLevelsStatusMessages;
         dvLogLevelsStatusMessages = @{XLog_Key(XLOGGER_LEVEL_SIMPLE)     :
-                                          STATUS_DVLOG_SIMPLE,
+                                          @"DEVELOPMENT",
                                       XLog_Key(XLOGGER_LEVEL_INFORMATION):
-                                          STATUS_DVLOG_INFO,
-                                      XLog_Key(XLOGGER_LEVEL_HIGHLIGHT)  :
-                                          STATUS_DVLOG_HIGHLIGHT,
+                                          @"DEVELOPMENT:INFO",
+                                      XLog_Key(XLOGGER_LEVEL_IMPORTANT)  :
+                                          @"DEVELOPMENT:IMPORTANT",
                                       XLog_Key(XLOGGER_LEVEL_WARNING)    :
-                                          STATUS_DVLOG_WARNING,
+                                          @"DEVELOPMENT:WARNING",
                                       XLog_Key(XLOGGER_LEVEL_ERROR)      :
-                                          STATUS_DVLOG_ERROR
+                                          @"DEVELOPMENT:ERROR"
                                       };
         
         NSDictionary *ddLogLevelsStatusMessages;
         ddLogLevelsStatusMessages = @{XLog_Key(XLOGGER_LEVEL_SIMPLE)     :
-                                          STATUS_DDLOG_SIMPLE,
+                                          @"DBG&DEV",
                                       XLog_Key(XLOGGER_LEVEL_INFORMATION):
-                                          STATUS_DDLOG_INFO,
-                                      XLog_Key(XLOGGER_LEVEL_HIGHLIGHT)  :
-                                          STATUS_DDLOG_HIGHLIGHT,
+                                          @"DBG&DEV:INFO",
+                                      XLog_Key(XLOGGER_LEVEL_IMPORTANT)  :
+                                          @"DBG&DEV:IMPORTANT",
                                       XLog_Key(XLOGGER_LEVEL_WARNING)    :
-                                          STATUS_DDLOG_WARNING,
+                                          @"DBG&DEV:WARNING",
                                       XLog_Key(XLOGGER_LEVEL_ERROR)      :
-                                          STATUS_DDLOG_ERROR
+                                          @"DBG&DEV:ERROR"
                                       };
         
         NSDictionary *oLogLevelsStatusMessages;
         oLogLevelsStatusMessages = @{XLog_Key(XLOGGER_LEVEL_SIMPLE)     :
-                                         STATUS_OLOG_SIMPLE,
+                                         @"ONLINE",
                                      XLog_Key(XLOGGER_LEVEL_INFORMATION):
-                                         STATUS_OLOG_INFO,
-                                     XLog_Key(XLOGGER_LEVEL_HIGHLIGHT)  :
-                                         STATUS_OLOG_HIGHLIGHT,
+                                         @"ONLINE:INFO",
+                                     XLog_Key(XLOGGER_LEVEL_IMPORTANT)  :
+                                         @"ONLINE:IMPORTANT",
                                      XLog_Key(XLOGGER_LEVEL_WARNING)    :
-                                         STATUS_OLOG_WARNING,
+                                         @"ONLINE:WARNING",
                                      XLog_Key(XLOGGER_LEVEL_ERROR)      :
-                                         STATUS_OLOG_ERROR
+                                         @"ONLINE:ERROR"
                                      };
         
-        defaultStatusInformations = @{key_Status_Color                        :
-                                          logLevelsStatusColors,
-                                      XLog_Key(XLOGGER_TYPE_DEBUG)            :
+        defaultStatusInformations = @{XLog_Key(XLOGGER_TYPE_DEBUG)            :
                                           dLogLevelsStatusMessages,
                                       XLog_Key(XLOGGER_TYPE_DEVELOPMENT)      :
                                           dvLogLevelsStatusMessages,
@@ -549,32 +553,53 @@ static NSString *const key_Status_Color = @"status_color";
     return defaultStatusInformations;
 }
 
-- (NSString *)defaultStatusMessageForLogType:(XLOGGER_TYPE)paramLogType level:(XLOGGER_LEVEL)paramLogLevel
-{
+- (NSString *)defaultLogDescriptionForLogType:(XLOGGER_TYPE)paramLogType
+                                        level:(XLOGGER_LEVEL)paramLogLevel {
     
-    NSDictionary *statusDictionary = [self getDefaultStatusInformations];
-    NSString     *statusMessage = statusDictionary[XLog_Key(paramLogType)][XLog_Key(paramLogLevel)];
+    NSDictionary *statusDictionary = [self defaultLogDescriptionMessages];
+    NSString     *statusMessage    = statusDictionary[XLog_Key(paramLogType)][XLog_Key(paramLogLevel)];
+    
+    [self setLogHeaderDescriptionMessageString: statusMessage];
+    statusMessage = [self colorFormattedStringFromString:statusMessage
+                                         withColorFormat:nil];
+    
+    return statusMessage;
+}
+
+- (NSString *)colorFormattedStringFromString:(NSString *)paramString
+                             withColorFormat:(NSString *)paramColorFormat {
+    
+    NSString *colorFormat;
     
     if (self.colorsEnabled) {
         
-        NSString *statusColor   = statusDictionary[key_Status_Color][XLog_Key(paramLogLevel)];
-        switch (paramLogLevel) {
-            case XLOGGER_LEVEL_SIMPLE:
-                return statusMessage;
-                break;
-            default:
-            {
-                return [NSString stringWithFormat:@"%@%@%@",
-                        [self convertBackgroundColorToText: statusColor],
-                        statusMessage,
-                        XCODE_COLORS_RESET];
-            }
-                break;
+        if (paramColorFormat) {
+            colorFormat = paramColorFormat;
+        } else if (self.backgroundColorFormat) {
+            colorFormat = [self convertBackgroundColorToText: self.backgroundColorFormat];
+        } else {
+            colorFormat = self.textColorFormat;
         }
-    } else {
-        return statusMessage;
+        
+        colorFormat = [NSString stringWithFormat:@"%@%@%@%@",
+                       XCODE_COLORS_ESCAPE,
+                       colorFormat,
+                       paramString,
+                       XCODE_COLORS_RESET];
+        
+        return colorFormat;
     }
-    return nil;
+    
+    return paramString;
 }
+
+#pragma mark Helpers
+- (NSString *)stringFromLogType:(XLOGGER_TYPE)logType
+                          level:(XLOGGER_LEVEL)logLevel {
+    return [[self.class stringFromLogType:logType]
+            stringByAppendingString:
+            [self.class stringFromLogLevel:logLevel]];
+}
+
 
 @end

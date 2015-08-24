@@ -23,23 +23,23 @@
 			<key>INFO</key>
 			<dict>
 				<key>TXT_COLOR</key>
-				<string>whiteColor</string>
-				<key>BGD_COLOR</key>
-				<string>purpleColor</string>
-			</dict>
-			<key>HIGHLIGHT</key>
-			<dict>
-				<key>TXT_COLOR</key>
 				<string>blackColor</string>
 				<key>BGD_COLOR</key>
 				<string>greenColor</string>
+			</dict>
+			<key>IMPORTANT</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>131 48 128</string>
 			</dict>
 			<key>WARNING</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
 				<key>BGD_COLOR</key>
-				<string>yellowColor</string>
+				<string>240 212 0</string>
 			</dict>
 			<key>ERROR</key>
 			<dict>
@@ -57,14 +57,14 @@
 			<key>SIMPLE</key>
 			<dict>
 				<key>TXT_COLOR</key>
-				<string>20 235 0</string>
+				<string>35 255 131</string>
 				<key>BGD_COLOR</key>
 				<string></string>
 			</dict>
 			<key>NO_HEADER</key>
 			<dict>
 				<key>TXT_COLOR</key>
-				<string>20 235 0</string>
+				<string>35 255 131</string>
 				<key>BGD_COLOR</key>
 				<string></string>
 			</dict>
@@ -73,14 +73,14 @@
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
 				<key>BGD_COLOR</key>
-				<string>218 167 250</string>
+				<string>35 255 131</string>
 			</dict>
-			<key>HIGHLIGHT</key>
+			<key>IMPORTANT</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
 				<key>BGD_COLOR</key>
-				<string>greenColor</string>
+				<string>228 124 72</string>
 			</dict>
 			<key>WARNING</key>
 			<dict>
@@ -93,6 +93,198 @@
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>redColor</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>DEFAULT_DUSK_THEME</key>
+	<dict>
+		<key>ALL</key>
+		<dict>
+			<key>SIMPLE</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>131 192 87</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>NO_HEADER</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>131 192 87</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>INFO</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>blackColor</string>
+				<key>BGD_COLOR</key>
+				<string>131 192 87</string>
+			</dict>
+			<key>IMPORTANT</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>blackColor</string>
+				<key>BGD_COLOR</key>
+				<string>0 160 190</string>
+			</dict>
+			<key>WARNING</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>30 32 40</string>
+				<key>BGD_COLOR</key>
+				<string>yellowColor</string>
+			</dict>
+			<key>ERROR</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>30 32 40</string>
+				<key>BGD_COLOR</key>
+				<string>219 44 56</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>SOLARIZE_LIGHT_THEME</key>
+	<dict>
+		<key>ALL</key>
+		<dict>
+			<key>SIMPLE</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>112 130 132</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>NO_HEADER</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>112 130 132</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>INFO</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>115 138 5</string>
+			</dict>
+			<key>IMPORTANT</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>89 90 183</string>
+			</dict>
+			<key>WARNING</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>165 119 6</string>
+			</dict>
+			<key>ERROR</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>189 54 19</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>SOLARIZE_DARK_THEME</key>
+	<dict>
+		<key>ALL</key>
+		<dict>
+			<key>SIMPLE</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>112 130 132</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>NO_HEADER</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>112 130 132</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>INFO</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>37 146 134</string>
+			</dict>
+			<key>IMPORTANT</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>89 90 183</string>
+			</dict>
+			<key>WARNING</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>165 119 6</string>
+			</dict>
+			<key>ERROR</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>whiteColor</string>
+				<key>BGD_COLOR</key>
+				<string>189 54 19</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>DRACULA_THEME</key>
+	<dict>
+		<key>ALL</key>
+		<dict>
+			<key>SIMPLE</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>139 233 253</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>NO_HEADER</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>139 233 253</string>
+				<key>BGD_COLOR</key>
+				<string></string>
+			</dict>
+			<key>INFO</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>blackColor</string>
+				<key>BGD_COLOR</key>
+				<string>80 250 123</string>
+			</dict>
+			<key>IMPORTANT</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>blackColor</string>
+				<key>BGD_COLOR</key>
+				<string>189 147 249</string>
+			</dict>
+			<key>WARNING</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>blackColor</string>
+				<key>BGD_COLOR</key>
+				<string>241 250 140</string>
+			</dict>
+			<key>ERROR</key>
+			<dict>
+				<key>TXT_COLOR</key>
+				<string>blackColor</string>
 				<key>BGD_COLOR</key>
 				<string>redColor</string>
 			</dict>
@@ -123,7 +315,7 @@
 				<key>BGD_COLOR</key>
 				<string>218 167 250</string>
 			</dict>
-			<key>HIGHLIGHT</key>
+			<key>IMPORTANT</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
@@ -171,7 +363,7 @@
 				<key>BGD_COLOR</key>
 				<string>purpleColor</string>
 			</dict>
-			<key>HIGHLIGHT</key>
+			<key>IMPORTANT</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
@@ -216,7 +408,7 @@
 				<key>BGD_COLOR</key>
 				<string>purpleColor</string>
 			</dict>
-			<key>HIGHLIGHT</key>
+			<key>IMPORTANT</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
@@ -261,7 +453,7 @@
 				<key>BGD_COLOR</key>
 				<string>purpleColor</string>
 			</dict>
-			<key>HIGHLIGHT</key>
+			<key>IMPORTANT</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
@@ -306,7 +498,7 @@
 				<key>BGD_COLOR</key>
 				<string>purpleColor</string>
 			</dict>
-			<key>HIGHLIGHT</key>
+			<key>IMPORTANT</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
@@ -351,7 +543,7 @@
 				<key>BGD_COLOR</key>
 				<string>purpleColor</string>
 			</dict>
-			<key>HIGHLIGHT</key>
+			<key>IMPORTANT</key>
 			<dict>
 				<key>TXT_COLOR</key>
 				<string>blackColor</string>
