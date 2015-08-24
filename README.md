@@ -342,7 +342,7 @@ You can find them in the master folder after cloning or downloading the reposito
 ###<a name="changelog"></a>Changelog:
 `Version 1.2.0:`  
 * More refactoring
-* `_IMPORTANT` log level renamed to `_IMPORTANT`
+* `_HIGHLIGHT` log level renamed to `_IMPORTANT`
 * Fixed some issues regarding Logs Header Descriptions
 * Deprecated `setLogHeaderDescription:forLogType:level:`
 * New method `setLogHeaderDescription:forLogType:level:color:`   
