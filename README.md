@@ -373,6 +373,7 @@ I highly appreciate any feedback, positive and/or constructive so I can improve 
 
 ####Contributors
 __Solarize Light__ & __Dark__ themes based on the work of Jason Brennan https://github.com/jbrennan/xcode4themes .
+
 __Dracula__ theme based on the work of Zeno Rocha https://github.com/zenorocha/dracula-theme .
 
 ####License
