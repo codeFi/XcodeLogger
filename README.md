@@ -245,7 +245,7 @@ You can also change the `timestamp` format by using a valid `NSDateFormatter` fo
 
 ###<a name="themes"></a>`Color Themes`
 Xcode Logger uses color themes for its log types and levels. 
-It comes with two default themes and you can very easily create your own.
+It comes with `six default themes` and you can very easily create your own.
 
 Different color themes can be used in different classes.
 
@@ -267,9 +267,8 @@ For convenience, there are two constants defined for the default themes in `Xcod
 XLCT_DEFAULT_LIGHT_THEME  //based on Xcode's Default Theme
 XLCT_DEFAULT_DUSK_THEME   //based on Xcode's Dusk Theme
 XLCT_DEFAULT_DARK_THEME   //based on Xcode's Midnight Theme
-XLCT_SOLARIZE_LIGHT_THEME //Based on Solarize Light Theme by Jason Brennan https://github.com/jbrennan/
+XLCT_SOLARIZE_LIGHT_THEME //Based on Solarize Light Theme by Jason Brennan https://github.com/jbrennan/xcode4themes
 XLCT_SOLARIZE_DARK_THEME  //Based on Solarize Dark Theme by Jason Brennan https://github.com/jbrennan/xcode4themes
-
 XLCT_DRACULA_THEME        //Based on Dracula Theme by Zeno Rocha https://github.com/zenorocha/dracula-theme
 ```
 
