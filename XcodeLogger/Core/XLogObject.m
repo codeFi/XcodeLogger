@@ -296,6 +296,9 @@ static NSString *const DEFAULT_HEADER_FORMAT_SCHEME_LOGS = @"[%@](%@)=> [>%@<]:%
 #pragma mark - PRIVATE
 /* ------------------ */
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 #pragma mark Init
 - (void)loadDefaults {
