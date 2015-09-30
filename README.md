@@ -30,11 +30,6 @@ Xcode Logger has been tested on iOS 7, 8 and OSX. It requires ARC.
 (http://i57.tinypic.com/2it544n.jpg)
 (__Dracula__ color theme by [Zeno Rocha](https://github.com/zenorocha/dracula-theme))
 
-![Xcode Logger Performance: Synchronous Tests]
-(http://i.imgur.com/MgXsE94.jpg?1)
-![Xcode Logger Performance: Asynchronous Tests]
-(http://i.imgur.com/xlmpt2G.jpg)
-
 ##<a name="features"></a> Features
 **Xcode Logger** provides multiple types of scheme dependent and independent loggers with multiple levels of logging. It ships by default as plug-and-play with the following types of loggers:     
  - `DLog()`&nbsp;&nbsp;- DEBUG
@@ -351,6 +346,12 @@ And you can set the background color for the output by calling:
 [> back to table of contents](#TOC)   
 
 ###<a name="performance"></a>Performance Tests
+
+![Xcode Logger Performance: Synchronous Tests]
+(http://i.imgur.com/MgXsE94.jpg?1)
+![Xcode Logger Performance: Asynchronous Tests]
+(http://i.imgur.com/xlmpt2G.jpg)
+
 `Xcode Logger` comes with a class called `XLPerformanceTests`. You can use its public methods to test `Xcode Logger`.
 
 ### Code Samples
