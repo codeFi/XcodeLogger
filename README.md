@@ -11,7 +11,8 @@ Xcode Logger is a __fast__ (up to \*6x times faster than *NSLog* and up to 4x ti
 ---
 Xcode Logger has been tested on iOS 7, 8 and OSX. It requires ARC.
 
-##<a name="contents"></a> Documentation
+<a name="TOC"></a> 
+##Documentation
 * [Features](#features)
 * [How to install](#install)
 * [How to use](#use)
@@ -63,7 +64,7 @@ Almost every log type and level can be can be customized as follows:
 - Number of new lines (spaces) between header and output or between output and the next log statement.
 - Timestamp format for `timestamp` argument in information header.
 
-[> back to table of contents](#contents)  
+[> back to table of contents](#TOC)  
 
 ##<a name="install"></a>How to install
 
@@ -96,7 +97,7 @@ Next you'll need to add the following script to your every scheme under `Build` 
 ![Add the script to your schema]
 (http://i57.tinypic.com/6thddw.jpg)
 
-[> back to table of contents](#contents)  
+[> back to table of contents](#TOC)  
 
 ##<a name="use"></a>How to use
 ### `Default Logger`
@@ -237,7 +238,7 @@ You can also change the `timestamp` format by using a valid `NSDateFormatter` fo
 - (void)setTimestampFormat:(NSString *)paramTimestampFormat;
 ```
 
-[> back to table of contents](#contents)  
+[> back to table of contents](#TOC)  
 
 ###<a name="themes"></a>`Color Themes`
 ![Xcode Logger - Dusk Theme]
@@ -305,7 +306,7 @@ You also have detailed `theme creation instructions` by calling:
 [[XcodeLogger sharedManager] printColorThemeCreationInstructions];
 ```
 
-[> back to table of contents](#contents)  
+[> back to table of contents](#TOC)  
 
 ###<a name="colorformatting"></a>`Colors Formatting Options`
 You can enable or disable support for color logs and change the text and background colors of the body of the output (headers excluded) independently of the currently loaded color theme (if it's loaded before making a color change).
@@ -347,7 +348,7 @@ And you can set the background color for the output by calling:
                                  Blue:(NSUInteger)blue;
 ```   
 
-[> back to table of contents](#contents)   
+[> back to table of contents](#TOC)   
 
 ###<a name="performance"></a>Performance Tests
 `Xcode Logger` comes with a class called `XLPerformanceTests`. You can use its public methods to test `Xcode Logger`.
@@ -383,7 +384,7 @@ You can find them in the master folder after cloning or downloading the reposito
 * UIColor / NSColor support
 * Log status description customization options
 
-[> back to table of contents](#contents)  
+[> back to table of contents](#TOC)  
 
 ----
 
