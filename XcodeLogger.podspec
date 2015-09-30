@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "XcodeLogger"
-  s.version      = "1.2.0"
+  s.version      = "1.2.1"
   s.summary      = "Simple, fast, colorful, flexible and customizable NSLog replacement."
   s.description  = <<-DESC
                    Xcode Logger is a fast (up to *6x times faster than NSLog and up to 4x times faster than CocoaLumberjack), extremely simple to use, very flexible library which provides scheme-based, customizable and theme based, colorful and filterable NSLog replacements.
@@ -16,9 +16,9 @@ Pod::Spec.new do |s|
   s.social_media_url   = "http://twitter.com/razvan_tanase"
   s.ios.deployment_target = "5.0"
   s.osx.deployment_target = "10.7"
-  s.source       = { 
-  					 :git => "https://github.com/codeFi/XcodeLogger.git", 
-  					 :tag => "1.2.0"
+  s.source       = {
+  					 :git => "https://github.com/codeFi/XcodeLogger.git",
+  					 :tag => "1.2.1"
   				   }
 
   s.source_files  = "XcodeLogger/**/*.{h,m}"
