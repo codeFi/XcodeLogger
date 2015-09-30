@@ -362,7 +362,7 @@ You can find them in the master folder after cloning or downloading the reposito
 ###<a name="changelog"></a>Changelog:
 `Version 1.2.1:`
 * Added a global filter option through the `XL_FILTER_GLOBAL_LEVELS` macro
-* A minor addition to `XLogObject` class which isn't used at this moment (the `dealloc` method)
+* A minor addition to `XLogObject` class which isn't used at this moment (the `dealloc` method) 
 
 `Version 1.2.0:`  
 * More refactoring
