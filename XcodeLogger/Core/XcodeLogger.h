@@ -87,7 +87,7 @@ static NSString *const XLCT_DRACULA_THEME        = @"DRACULA_THEME";       //Bas
  * @brief Call this in any of your classes to filter per class, the output by the logger level(s) you want.
  * @discussion This method forces every logger type to output only the selected levels. This filter is <u>per class</u> so you can have a different filter for every class from which you call it.
  * @discussion You can also call this method multiple times in an initializer class of your app (like @c AppDelegate) and set the <i><u>file names</u></i> for which you want to set filters on. The file names are <u>case-insensitive</u>.
- * @note There's also a convenience <strong>macro</strong>: <code>XL_FILTER_LEVELS()</code> which provides the <i>current file name</i> of the @c Class from which you call this method so the only thing left to do is to add the <i>levels</i> you wish to filter.
+ * @note There're also some convenience <strong>macros</strong>: <code>XL_FILTER_LEVELS()</code> which provides the <i>current file name</i> of the @c Class from which you call this method so the only thing left to do is to add the <i>levels</i> you wish to filter and <code>XL_FILTER_GLOBAL_LEVELS()</code> which filters log levels globally.
  *
  * @code
  *
@@ -108,7 +108,7 @@ static NSString *const XLCT_DRACULA_THEME        = @"DRACULA_THEME";       //Bas
  * @endcode
  *
  * @param paramLogLevels An array containing the levels you want to get output from. You can use the convenience macros provided.
- * @param paramFileName A string with the name of a class implementation file (.m). The file name must be suffixed by its extension (.m).
+ * @param paramFileName A string with the name of a class implementation file (.m). The file name must be suffixed by its extension (.m). You can pass @c nil to filter the specified log levels globally.
  */
 - (void)filterXLogLevels:(NSArray *)paramLogLevels
              forFileName:(NSString *)paramFileName;
@@ -116,6 +116,10 @@ static NSString *const XLCT_DRACULA_THEME        = @"DRACULA_THEME";       //Bas
 #define XL_FILTER_LEVELS(...) \
 [[XcodeLogger sharedManager] filterXLogLevels:[NSArray arrayWithObjects:__VA_ARGS__, nil] \
 forFileName:[[NSString stringWithUTF8String:FILE_NAME] lastPathComponent]]
+
+#define XL_FILTER_GLOBAL_LEVELS(...) \
+[[XcodeLogger sharedManager] filterXLogLevels:[NSArray arrayWithObjects:__VA_ARGS__, nil] \
+forFileName:nil]
 
 
 #pragma mark - Format

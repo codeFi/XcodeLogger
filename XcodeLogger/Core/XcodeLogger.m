@@ -49,6 +49,7 @@ static NSString *DVLOG_BUILD_SCHEME_NAME;
 
 static BOOL COLORS_ENABLED  = YES;
 
+static NSString *XL_GLOBAL_FILTER_STRING = @"GLOBAL_FILTER";
 static NSMutableDictionary *XL_FILTERS_DICTIONARY;
 
 #pragma mark - XCODE LOGGER
@@ -113,7 +114,15 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
         XL_FILTERS_DICTIONARY = [[NSMutableDictionary alloc] init];
     }
     
-    NSString *fileName = [paramFileName uppercaseString];
+    
+    NSString *fileName;
+    
+    if (paramFileName) {
+        fileName = [paramFileName uppercaseString];
+    } else {
+        fileName = XL_GLOBAL_FILTER_STRING;
+    }
+    
     NSMutableArray *logLevels = XL_FILTERS_DICTIONARY[fileName];
     
     if (!logLevels) {
@@ -658,7 +667,13 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     
     BOOL allowOutput = NO;
     
-    NSArray *logLevels = [XL_FILTERS_DICTIONARY[[paramFileName uppercaseString]] copy];
+    NSArray *logLevels = [XL_FILTERS_DICTIONARY[XL_GLOBAL_FILTER_STRING] copy];
+    
+    NSLog(@"%@", logLevels);
+    
+    if (!logLevels) {
+        logLevels = [XL_FILTERS_DICTIONARY[[paramFileName uppercaseString]] copy];
+    }
     
     if (logLevels) {
         if ([logLevels containsObject:paramLogLevel]) {
