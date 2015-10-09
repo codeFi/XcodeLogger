@@ -360,7 +360,7 @@ These are GREAT to see and test some examples for uses of __Xcode Logger__.
 You can find them in the master folder after cloning or downloading the repository.
 
 ###<a name="changelog"></a>Changelog:
-`Version 1.2.1:`
+`Version 1.2.2:`
 * Code maintenance.
 
 `Version 1.2.1:`
