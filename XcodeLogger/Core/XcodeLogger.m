@@ -669,8 +669,6 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
     
     NSArray *logLevels = [XL_FILTERS_DICTIONARY[XL_GLOBAL_FILTER_STRING] copy];
     
-    NSLog(@"%@", logLevels);
-    
     if (!logLevels) {
         logLevels = [XL_FILTERS_DICTIONARY[[paramFileName uppercaseString]] copy];
     }
