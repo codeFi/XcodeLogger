@@ -63,7 +63,7 @@ Almost every log type and level can be can be customized as follows:
 
 ##<a name="install"></a>How to install
 
-### Cocoapods
+### CocoaPods
 ```
 pod 'XcodeLogger'
 ````
