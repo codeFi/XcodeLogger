@@ -12,7 +12,7 @@ Xcode Logger is a __fast__ (up to \*6x times faster than *NSLog* and up to 4x ti
 Xcode Logger has been tested on iOS 7, 8 and OSX. It requires ARC.
 
 <a name="TOC"></a> 
-##Documentation
+## Documentation
 * [Features](#features)
 * [How to install](#install)
 * [How to use](#use)
@@ -30,7 +30,7 @@ Xcode Logger has been tested on iOS 7, 8 and OSX. It requires ARC.
 (http://i57.tinypic.com/2it544n.jpg)
 (__Dracula__ color theme by [Zeno Rocha](https://github.com/zenorocha/dracula-theme))
 
-##<a name="features"></a> Features
+## <a name="features"></a> Features
 **Xcode Logger** provides multiple types of scheme dependent and independent loggers with multiple levels of logging. It ships by default as plug-and-play with the following types of loggers:     
  - `DLog()`&nbsp;&nbsp;- DEBUG
  - `DVLog()`&nbsp;- DEVELOPMENT
@@ -61,7 +61,7 @@ Almost every log type and level can be can be customized as follows:
 
 [> back to table of contents](#TOC)  
 
-##<a name="install"></a>How to install
+## <a name="install"></a>How to install
 
 ### CocoaPods
 ```
@@ -94,11 +94,11 @@ Next you'll need to add the following script to your every scheme under `Build` 
 
 [> back to table of contents](#TOC)  
 
-##<a name="use"></a>How to use
+## <a name="use"></a>How to use
 ### `Default Logger`
 To start using **Xcode Logger** all you have to do is to `#import "XcodeLogger.h"` in your classes and use the `XLog` type logger with all its levels as a replacement for `NSLog`.
 
-###<a name="scheme"></a>`Scheme Linking`
+### <a name="scheme"></a>`Scheme Linking`
 To start using scheme-dependent loggers you'll need to do the following (considering you've followed the optional but now-required steps from **Setup**):
 
 Tell **Xcode Logger** the name of the `key` you've defined in your `Info.plist` and script by calling:
@@ -129,7 +129,7 @@ That's it!
 
 > NOTE: you can't link a scheme with `XLOGGER_TYPE_NSLOG_REPLACEMENT` or `XLOGGER_TYPE_DEBUG_DEVELOPMENT` because of their intended purposes. Doing so, will raise an exception.
 
-###<a name="filters"></a>`Log Filters`
+### <a name="filters"></a>`Log Filters`
 You can filter single or multiple log levels per class (implementation file) or globally.
 
 You have two options: either use a method and set the implementation file name manually or you can use a convenience macro that greatly simplifies the whole process.
@@ -161,7 +161,7 @@ XL_LEVEL_ERROR
 ```
 
 
-###<a name="header"></a>`Header Formatting Options`
+### <a name="header"></a>`Header Formatting Options`
 You can change the default and customize the informations header for any `XLOGGER_TYPE` and `XLOGGER_LEVEL` like this:
 
 ```Objective-C
@@ -235,7 +235,7 @@ You can also change the `timestamp` format by using a valid `NSDateFormatter` fo
 
 [> back to table of contents](#TOC)  
 
-###<a name="themes"></a>`Color Themes`
+### <a name="themes"></a>`Color Themes`
 ![Xcode Logger - Dusk Theme]
 (http://i61.tinypic.com/24qv4n5.png)
 (__Dusk__ color theme based on Xcode's Dusk Theme)
@@ -286,7 +286,7 @@ XLCT_DRACULA_THEME        //Based on Dracula Theme by Zeno Rocha https://github.
 
 > NOTE: Xcode Logger loads `DEFAULT_LIGHT_THEME` by default so you don't have to call `loadColorThemeWithName:` if you're not interested in changing the theme.
 
-####<a name="creatingtheme"></a>Creating Color Themes
+#### <a name="creatingtheme"></a>Creating Color Themes
 
 All Xcode Logger's themes are defined in `XLColorThemes.plist` file where you can find two `sample themes` next to the default ones.
 
@@ -303,7 +303,7 @@ You also have detailed `theme creation instructions` by calling:
 
 [> back to table of contents](#TOC)  
 
-###<a name="colorformatting"></a>`Colors Formatting Options`
+### <a name="colorformatting"></a>`Colors Formatting Options`
 You can enable or disable support for color logs and change the text and background colors of the body of the output (headers excluded) independently of the currently loaded color theme (if it's loaded before making a color change).
 
 By default, colors are enabled but you can change this by calling:
@@ -345,7 +345,7 @@ And you can set the background color for the output by calling:
 
 [> back to table of contents](#TOC)   
 
-###<a name="performance"></a>Performance Tests
+### <a name="performance"></a>Performance Tests
 
 ![Xcode Logger Performance: Synchronous Tests]
 (http://i.imgur.com/MgXsE94.jpg?1)
@@ -359,7 +359,7 @@ This repository contains code samples for both `iOS` and `OSX`.
 These are GREAT to see and test some examples for uses of __Xcode Logger__.  
 You can find them in the master folder after cloning or downloading the repository.
 
-###<a name="changelog"></a>Changelog:
+### <a name="changelog"></a>Changelog:
 `Version 1.2.2:`
 * Code maintenance.
 
@@ -392,18 +392,18 @@ You can find them in the master folder after cloning or downloading the reposito
 
 ----
 
-###<a name="credits"></a>Author
+### <a name="credits"></a>Author
 This library was created and made open-source by [Razvan Tanase](https://ro.linkedin.com/in/ratanase).
 
 You can also find me on Twitter [@razvan_tanase](https://twitter.com/razvan_tanase).
 
 I highly appreciate any feedback, positive and/or constructive so I can improve this project.
 
-###Contributors
+### Contributors
 __Solarize Light__ & __Dark__ themes based on the work of Jason Brennan https://github.com/jbrennan/xcode4themes.  
 __Dracula__ theme based on the work of Zeno Rocha https://github.com/zenorocha/dracula-theme.
 
-###License
+### License
 __You're more than welcome to contribute to this project!__ When you have a change you’d like to see in the master repository, please [send a pull request](https://github.com/codeFi/XcodeLogger/pulls).
 
 The MIT License (MIT) Copyright © 2015 Razvan Tanase ([Codebringers Software](http://codebringers.com)).
