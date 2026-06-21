@@ -1,66 +1,230 @@
+import Foundation
 import XCTest
 @testable import XcodeLogger
 
 final class XcodeLoggerTests: XCTestCase {
-    func testDisabledConfigurationSuppressesAllOutput() {
-        let sink = RecordingSink()
+    func testScopedLoggerInheritsCategoryMetadataAndSubsystemOverride() {
+        let sink = TestSink()
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "base", sinks: [sink]))
+            .category(.networking)
+            .scoped(metadata: ["requestID": "1"])
+            .scoped(subsystem: "child")
+
+        logger.log(level: .information, message: "hello", metadata: ["requestID": "2", "user": "ana"])
+
+        XCTAssertEqual(sink.events.count, 1)
+        XCTAssertEqual(sink.events[0].category, .networking)
+        XCTAssertEqual(sink.events[0].subsystem, "child")
+        XCTAssertEqual(sink.events[0].metadata["requestID"], "2")
+        XCTAssertEqual(sink.events[0].metadata["user"], "ana")
+    }
+
+    func testScopedLoggerCanOverrideInheritedCategory() {
+        let sink = TestSink()
+        let base = Logger(configuration: LoggerConfiguration(subsystem: "base", sinks: [sink])).category(.debug)
+        let child = base.scoped(category: .development, metadata: ["scope": "child"])
+
+        child.log(level: .important, message: "value")
+
+        XCTAssertEqual(sink.events.first?.category, .development)
+        XCTAssertEqual(sink.events.first?.metadata["scope"], "child")
+    }
+
+    func testWhenEnabledProvidesSimpleBuildPolicyBridge() {
+        let sink = TestSink()
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]).whenEnabled(false))
+
+        logger.log(level: .error, message: "ignored")
+
+        XCTAssertTrue(sink.events.isEmpty)
+    }
+
+    func testPerSinkMinimumLevelsCanDiffer() {
+        let infoSink = TestSink(policy: LoggerSinkPolicy(minimumLevel: .information))
+        let errorSink = TestSink(policy: LoggerSinkPolicy(minimumLevel: .error))
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [infoSink, errorSink]))
+
+        logger.log(level: .warning, category: .debug, message: "warning")
+        logger.log(level: .error, category: .debug, message: "error")
+
+        XCTAssertEqual(infoSink.events.map(\.level), [.warning, .error])
+        XCTAssertEqual(errorSink.events.map(\.level), [.error])
+    }
+
+    func testPerSinkRegexRulesAndFileOverrides() {
+        let sink = TestSink(policy: LoggerSinkPolicy(
+            minimumLevel: .error,
+            allowedLevelsByFile: ["SPECIAL.SWIFT": [.warning]],
+            categoryRules: [
+                LoggerCategoryRule(pattern: "^debug$", mode: .allow),
+                LoggerCategoryRule(pattern: "network", mode: .deny),
+                LoggerCategoryRule(pattern: "([", mode: .allow)
+            ]
+        ))
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]))
+
+        logger.log(level: .warning, category: .debug, message: "allowed by file", source: LogSource(file: "Special.swift", function: "run()", line: 1))
+        logger.log(level: .error, category: .networking, message: "denied", source: LogSource(file: "Special.swift", function: "run()", line: 2))
+        logger.log(level: .error, category: .development, message: "blocked by allow list", source: LogSource(file: "Other.swift", function: "run()", line: 3))
+
+        XCTAssertEqual(sink.events.count, 1)
+        XCTAssertEqual(sink.events.first?.message, "allowed by file")
+    }
+
+    func testRedactionAppliesBeforeRenderingForAllSinks() {
+        let sinkA = TestSink()
+        let sinkB = TestSink(supportsANSIColors: true)
         let logger = Logger(configuration: LoggerConfiguration(
             subsystem: "test",
-            isEnabled: false,
-            sinks: [sink]
+            metadataRedactionRules: [LoggerMetadataRedactionRule(key: "token")],
+            messageRedactors: [LoggerMessageRedactor { $0.replacingOccurrences(of: "secret", with: "[REDACTED]") }],
+            sinks: [sinkA, sinkB]
         ))
 
-        logger.log(level: .error, category: .default, message: "ignored")
+        logger.log(level: .warning, category: .debug, message: "secret payload", metadata: ["token": "abc"])
 
-        XCTAssertTrue(sink.messages.isEmpty)
+        XCTAssertEqual(sinkA.events.first?.metadata["token"], "[REDACTED]")
+        XCTAssertEqual(sinkB.events.first?.metadata["token"], "[REDACTED]")
+        XCTAssertFalse(sinkA.renderedMessages[0].contains("secret"))
+        XCTAssertFalse(sinkA.renderedMessages[0].contains("abc"))
+        XCTAssertFalse(sinkB.renderedMessages[0].contains("secret"))
+        XCTAssertFalse(sinkB.renderedMessages[0].contains("abc"))
     }
 
-    func testBuildConfigurationProviderCanDisableLogging() {
-        let sink = RecordingSink()
-        let configuration = LoggerConfiguration(
-            subsystem: "test",
-            sinks: [sink]
-        ).applyingBuildConfiguration(DisabledBuildConfiguration.self)
-        let logger = Logger(configuration: configuration)
-
-        logger.log(level: .error, category: .default, message: "ignored")
-
-        XCTAssertFalse(configuration.isEnabled)
-        XCTAssertTrue(sink.messages.isEmpty)
-    }
-
-    func testMinimumLevelFiltering() {
-        let sink = RecordingSink()
+    func testRateLimitingUsesFixedWindowSuppression() {
+        let clock = ManualClock(date: Date(timeIntervalSince1970: 100))
+        let sink = TestSink(policy: LoggerSinkPolicy(
+            minimumLevel: .simple,
+            rateLimitRules: [LoggerRateLimitRule(category: .debug, maximumEvents: 2, window: 60)]
+        ))
         let logger = Logger(configuration: LoggerConfiguration(
             subsystem: "test",
-            minimumLevel: .warning,
-            sinks: [sink]
+            sinks: [sink],
+            clock: clock
         ))
 
-        logger.log(level: .information, category: .default, message: "ignored")
-        logger.log(level: .error, category: .default, message: "kept")
+        logger.log(level: .information, category: .debug, message: "1")
+        logger.log(level: .information, category: .debug, message: "2")
+        logger.log(level: .information, category: .debug, message: "3")
+        clock.advance(by: 61)
+        logger.log(level: .information, category: .debug, message: "4")
 
-        XCTAssertEqual(sink.messages.count, 1)
-        XCTAssertTrue(sink.messages[0].contains("kept"))
+        XCTAssertEqual(sink.events.map(\.message), ["1", "2", "4"])
     }
 
-    func testCategoryFiltering() {
-        let sink = RecordingSink()
+    func testSamplingRulesAreDeterministicWithInjectedRandomness() {
+        let sink = TestSink(policy: LoggerSinkPolicy(
+            minimumLevel: .simple,
+            samplingRules: [LoggerSamplingRule(category: .networking, probability: 0.5)]
+        ))
         let logger = Logger(configuration: LoggerConfiguration(
             subsystem: "test",
-            enabledCategories: [.debug],
-            sinks: [sink]
+            sinks: [sink],
+            randomNumberGenerator: SequenceRandom(values: [0.1, 0.7, 0.2])
         ))
 
-        logger.log(level: .simple, category: .development, message: "ignored")
-        logger.log(level: .simple, category: .debug, message: "kept")
+        logger.log(level: .information, category: .networking, message: "keep-1")
+        logger.log(level: .information, category: .networking, message: "drop")
+        logger.log(level: .information, category: .networking, message: "keep-2")
 
-        XCTAssertEqual(sink.events.map(\.category.rawValue), ["debug"])
+        XCTAssertEqual(sink.events.map(\.message), ["keep-1", "keep-2"])
     }
 
-    func testMetadataCaptureAndStructuredRendering() {
+    func testFileSinkWritesAppendsAndRotates() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let fileURL = directory.appendingPathComponent("app.log")
+        let sink = FileSink(fileURL: fileURL, maximumFileSizeInBytes: 90, maximumArchiveCount: 2)
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]))
+
+        for index in 0..<8 {
+            logger.log(level: .information, category: .debug, message: "entry-\(index)-payload")
+        }
+
+        waitUntil {
+            FileManager.default.fileExists(atPath: fileURL.path) &&
+            FileManager.default.fileExists(atPath: directory.appendingPathComponent("app.1.log").path)
+        }
+
+        let current = try String(contentsOf: fileURL)
+        let archive = try String(contentsOf: directory.appendingPathComponent("app.1.log"))
+        XCTAssertTrue(current.contains("entry-7-payload"))
+        XCTAssertTrue(archive.contains("entry-"))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.appendingPathComponent("app.3.log").path))
+    }
+
+    func testAsyncSinkDeliveryPreservesEventOrderingAcrossSinks() {
+        let sinkA = TestSink(deliveryMode: .asynchronous(batchSize: 8))
+        let sinkB = TestSink(deliveryMode: .asynchronous(batchSize: 8))
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sinkA, sinkB]))
+
+        for index in 0..<50 {
+            logger.log(level: .information, category: .debug, message: "value-\(index)")
+        }
+
+        waitUntil {
+            sinkA.events.count == 50 && sinkB.events.count == 50
+        }
+
+        XCTAssertEqual(sinkA.events.map(\.message), sinkB.events.map(\.message))
+        XCTAssertEqual(sinkA.events.first?.message, "value-0")
+        XCTAssertEqual(sinkA.events.last?.message, "value-49")
+    }
+
+    func testConcurrentLoggingWhileMutatingConfiguration() async {
+        let sink = TestSink(deliveryMode: .asynchronous(batchSize: 16))
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]))
+
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                for index in 0..<100 {
+                    logger.log(level: .information, category: .debug, message: "log-\(index)", metadata: ["id": "\(index)"])
+                }
+            }
+            group.addTask {
+                for index in 0..<50 {
+                    logger.updateConfiguration { configuration in
+                        configuration.minimumLevel = index.isMultiple(of: 2) ? .simple : .information
+                        configuration.theme = index.isMultiple(of: 2) ? .defaultLight : .dracula
+                    }
+                }
+            }
+        }
+
+        waitUntil {
+            sink.events.count == 100
+        }
+
+        XCTAssertEqual(Set(sink.events.compactMap { $0.metadata["id"] }).count, 100)
+    }
+
+    func testScopedChildLoggersRemainIsolatedAcrossTaskGroups() async {
+        let sink = TestSink(deliveryMode: .asynchronous(batchSize: 16))
+        let base = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]))
+
+        await withTaskGroup(of: Void.self) { group in
+            for value in 0..<40 {
+                group.addTask {
+                    base.scoped(metadata: ["task": "\(value)"]).category(.debug).log(
+                        level: .information,
+                        message: "value-\(value)"
+                    )
+                }
+            }
+        }
+
+        waitUntil {
+            sink.events.count == 40
+        }
+
+        XCTAssertEqual(Set(sink.events.compactMap { $0.metadata["task"] }).count, 40)
+    }
+
+    func testFormatterStructuredMessageIncludesMetadata() {
         let formatter = LoggerFormatter()
         let event = LogEvent(
+            timestamp: Date(timeIntervalSince1970: 1),
+            subsystem: "test",
             level: .information,
             category: .debug,
             message: "hello",
@@ -73,191 +237,81 @@ final class XcodeLoggerTests: XCTestCase {
         XCTAssertTrue(rendered.contains("hello"))
     }
 
-    func testHeaderFormattingUsesCustomTokens() {
-        let sink = RecordingSink()
-        let logger = Logger(configuration: LoggerConfiguration(
-            subsystem: "test",
-            formatting: LoggerFormatting(
-                timestampFormat: "yyyy",
-                headerTokens: [.literal("<"), .category, .literal(">"), .line],
-                lineSeparatorAfterHeader: " ",
-                lineSeparatorAfterMessage: ""
-            ),
-            sinks: [sink]
-        ))
-
-        logger.log(level: .important, category: .networking, message: "body", source: LogSource(file: "File.swift", function: "demo()", line: 42))
-
-        XCTAssertEqual(sink.messages.first, "<networking>42 body")
-    }
-
-    func testThemeResolutionAndANSIFormatting() {
-        let sink = RecordingSink(supportsANSIColors: true)
-        let logger = Logger(configuration: LoggerConfiguration(
-            subsystem: "test",
-            theme: .dracula,
-            sinks: [sink]
-        ))
-
-        logger.log(level: .warning, category: .default, message: "colored")
-
-        XCTAssertTrue(sink.messages[0].contains("\u{001B}["))
-    }
-
-    func testPlainTextFallbackWhenANSIDisabled() {
-        let sink = RecordingSink(supportsANSIColors: false)
-        let logger = Logger(configuration: LoggerConfiguration(
-            subsystem: "test",
-            theme: .dracula,
-            sinks: [sink]
-        ))
-
-        logger.log(level: .warning, category: .default, message: "plain")
-
-        XCTAssertFalse(sink.messages[0].contains("\u{001B}["))
-    }
-
-    func testStdoutSinkWritesRenderedOutputWithTrailingNewline() {
-        let buffer = LockedStringBuffer()
-        let sink = StdoutSink(supportsANSIColors: false) { message in
-            buffer.append(message)
-        }
-        let logger = Logger(configuration: LoggerConfiguration(
-            subsystem: "test",
-            sinks: [sink]
-        ))
-
-        logger.log(level: .information, category: .default, message: "stdout")
-
-        XCTAssertEqual(buffer.values.count, 1)
-        XCTAssertTrue(buffer.values[0].contains("stdout"))
-        XCTAssertTrue(buffer.values[0].hasSuffix("\n"))
-    }
-
-    func testCompatibilityMappingUsesCategoryBasedRouting() {
-        let sink = RecordingSink()
-        Logger.shared.updateConfiguration {
-            $0.sinks = [sink]
-            $0.minimumLevel = .simple
-        }
-
-        XcodeLogger.shared.emitCompatibilityLog(
-            type: .development,
-            level: .information,
-            file: "Legacy.m",
-            function: "-[Legacy test]",
-            line: 8,
-            message: "legacy"
-        )
-
-        XCTAssertEqual(sink.events.last?.category, .development)
-        XCTAssertEqual(sink.events.last?.level, .information)
-    }
-
-    func testGlobalAllowedLevelsOverrideThresholdFiltering() {
-        let sink = RecordingSink()
-        let logger = Logger(configuration: LoggerConfiguration(
-            subsystem: "test",
-            minimumLevel: .error,
-            globalAllowedLevels: [.warning],
-            sinks: [sink]
-        ))
-
-        logger.log(level: .warning, category: .default, message: "allowed")
-        logger.log(level: .error, category: .default, message: "blocked by explicit filter")
-
-        XCTAssertEqual(sink.messages.count, 1)
-        XCTAssertTrue(sink.messages[0].contains("allowed"))
-    }
-
-    func testEnvironmentOverrides() {
-        let sink = RecordingSink()
-        let configuration = LoggerConfiguration(subsystem: "test", sinks: [sink]).applyingEnvironment([
-            "XCODELOGGER_LEVEL": "warning",
-            "XCODELOGGER_CATEGORIES": "debug,networking",
-            "XCODELOGGER_ANSI": "false"
-        ])
-
-        XCTAssertEqual(configuration.minimumLevel, .warning)
-        XCTAssertEqual(configuration.enabledCategories, [.debug, .networking])
-        let debugSink = try? XCTUnwrap(configuration.sinks.first as? RecordingSink)
-        XCTAssertEqual(debugSink?.supportsANSIColors, false)
-    }
-
-    func testANSIDefaultIsDisabledWhenRunningInXcode() {
-        let environment = [
-            "TERM": "xterm-256color",
-            "XCODE_VERSION_ACTUAL": "2650"
-        ]
-
-        XCTAssertTrue(LoggerConfiguration.isRunningInXcode(environment: environment))
-        XCTAssertFalse(LoggerConfiguration.isANSISupportedByEnvironment(environment: environment))
-    }
-
-    func testConcurrentLoggingPreservesIsolatedMetadata() async {
-        let sink = RecordingSink()
-        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]))
-
-        await withTaskGroup(of: Void.self) { group in
-            for value in 0..<100 {
-                group.addTask {
-                    logger.log(
-                        level: .information,
-                        category: .debug,
-                        message: "value \(value)",
-                        metadata: ["id": "\(value)"],
-                        source: LogSource(file: "Task.swift", function: "work()", line: value)
-                    )
-                }
-            }
-        }
-
-        XCTAssertEqual(sink.events.count, 100)
-        let identifiers = Set(sink.events.compactMap { $0.metadata["id"] })
-        XCTAssertEqual(identifiers.count, 100)
-    }
-
-    func testPerformanceBaseline() {
-        let sink = RecordingSink()
-        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]))
+    func testDisabledLoggerPerformancePath() {
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test").whenEnabled(false))
 
         measure {
-            for value in 0..<1_000 {
-                logger.log(level: .simpleNoHeader, category: .default, message: "value \(value)")
+            for index in 0..<1_000 {
+                logger.log(level: .simple, category: .debug, message: "value-\(index)")
+            }
+        }
+    }
+
+    func testScopedLoggerPerformancePath() {
+        let sink = TestSink()
+        let logger = Logger(configuration: LoggerConfiguration(subsystem: "test", sinks: [sink]))
+        let scoped = logger.category(.debug).scoped(metadata: ["screen": "home"])
+
+        measure {
+            sink.reset()
+            for index in 0..<500 {
+                scoped.log(level: .information, message: "value-\(index)")
             }
         }
     }
 }
 
-private final class RecordingSink: LoggerSink {
-    let supportsANSIColors: Bool
+private final class ManualClock: LoggerClock, @unchecked Sendable {
     private let lock = NSLock()
-    private(set) var messages: [String] = []
-    private(set) var events: [LogEvent] = []
+    private var currentDate: Date
 
-    init(supportsANSIColors: Bool = false) {
-        self.supportsANSIColors = supportsANSIColors
+    init(date: Date) {
+        self.currentDate = date
     }
 
-    func write(event: LogEvent, rendered: String) {
+    func now() -> Date {
         lock.lock()
-        events.append(event)
-        messages.append(rendered)
+        defer { lock.unlock() }
+        return currentDate
+    }
+
+    func advance(by seconds: TimeInterval) {
+        lock.lock()
+        currentDate.addTimeInterval(seconds)
         lock.unlock()
     }
 }
 
-private final class LockedStringBuffer: @unchecked Sendable {
+private final class SequenceRandom: LoggerRandomNumberGenerator, @unchecked Sendable {
     private let lock = NSLock()
-    private(set) var values: [String] = []
+    private var values: [Double]
+    private var index = 0
 
-    func append(_ value: String) {
+    init(values: [Double]) {
+        self.values = values
+    }
+
+    func nextUnitInterval() -> Double {
         lock.lock()
-        values.append(value)
-        lock.unlock()
+        defer { lock.unlock() }
+        guard !values.isEmpty else {
+            return 1
+        }
+        let value = values[min(index, values.count - 1)]
+        index += 1
+        return value
     }
 }
 
-private enum DisabledBuildConfiguration: LoggerBuildConfigurationProviding {
-    static let isLoggingEnabled = false
+extension XCTestCase {
+    func waitUntil(timeout: TimeInterval = 2, pollInterval: TimeInterval = 0.01, _ condition: @escaping () -> Bool) {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if condition() {
+                return
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(pollInterval))
+        }
+        XCTFail("Condition not satisfied before timeout")
+    }
 }

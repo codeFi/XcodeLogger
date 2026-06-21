@@ -1,6 +1,6 @@
 # XcodeLogger
 
-`XcodeLogger 2.1.0` is the Swift-first replacement for the legacy Objective-C Xcode Logger project.
+`XcodeLogger 2.2.0` is the Swift-first replacement for the legacy Objective-C Xcode Logger project.
 
 This version keeps the familiar ideas:
 
@@ -15,6 +15,19 @@ It deliberately changes one important architectural point from the legacy projec
 - `XcodeLogger` only consumes the result as a safe on/off policy
 
 That is the main migration path away from the old Info.plist scheme-linking model.
+
+## 2.2 Update
+
+Version `2.2.0` expands the Swift package around a synchronous core and asynchronous sink delivery model.
+
+- scoped child loggers through `category(_:)` and `scoped(...)`
+- per-sink policy for minimum levels, regex category rules, file overrides, sampling, and rate limiting
+- redaction for metadata keys and message bodies before sink rendering
+- async-capable sinks with a shared serial delivery coordinator for deterministic ordering
+- new `FileSink` with size-based rotation and archive retention
+- shipped `TestSink` for package consumers writing logger tests
+- simplified build gating with `LoggerConfiguration.whenEnabled(_:)`
+- legacy Objective-C implementation tree removed from the repository, while `Compatibility/XcodeLogger.h` remains supported
 
 ## What Changed From The Legacy Project
 
@@ -55,7 +68,7 @@ Add the package from GitHub and depend on the `XcodeLogger` product.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/codeFi/XcodeLogger.git", from: "2.1.0")
+    .package(url: "https://github.com/codeFi/XcodeLogger.git", from: "2.2.0")
 ],
 targets: [
     .target(

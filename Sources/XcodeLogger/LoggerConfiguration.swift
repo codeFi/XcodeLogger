@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LoggerConfiguration {
+public struct LoggerConfiguration: @unchecked Sendable {
     public var subsystem: String
     public var isEnabled: Bool
     public var enabledCategories: Set<LoggerCategory>?
@@ -8,10 +8,15 @@ public struct LoggerConfiguration {
     public var categoryLevels: [LoggerCategory: LoggerLevel]
     public var allowedLevelsByFile: [String: Set<LoggerLevel>]
     public var globalAllowedLevels: Set<LoggerLevel>?
+    public var categoryRules: [LoggerCategoryRule]
+    public var metadataRedactionRules: [LoggerMetadataRedactionRule]
+    public var messageRedactors: [LoggerMessageRedactor]
     public var theme: LoggerTheme
     public var formatting: LoggerFormatting
     public var sinks: [LoggerSink]
     public var includeSourceMetadata: Bool
+    public var clock: any LoggerClock
+    public var randomNumberGenerator: any LoggerRandomNumberGenerator
 
     public init(
         subsystem: String,
@@ -21,10 +26,15 @@ public struct LoggerConfiguration {
         categoryLevels: [LoggerCategory: LoggerLevel] = [:],
         allowedLevelsByFile: [String: Set<LoggerLevel>] = [:],
         globalAllowedLevels: Set<LoggerLevel>? = nil,
+        categoryRules: [LoggerCategoryRule] = [],
+        metadataRedactionRules: [LoggerMetadataRedactionRule] = [],
+        messageRedactors: [LoggerMessageRedactor] = [],
         theme: LoggerTheme = .defaultLight,
         formatting: LoggerFormatting = LoggerFormatting(),
         sinks: [LoggerSink]? = nil,
-        includeSourceMetadata: Bool = true
+        includeSourceMetadata: Bool = true,
+        clock: any LoggerClock = SystemLoggerClock(),
+        randomNumberGenerator: any LoggerRandomNumberGenerator = SystemLoggerRandomNumberGenerator()
     ) {
         self.subsystem = subsystem
         self.isEnabled = isEnabled
@@ -33,6 +43,9 @@ public struct LoggerConfiguration {
         self.categoryLevels = categoryLevels
         self.allowedLevelsByFile = allowedLevelsByFile
         self.globalAllowedLevels = globalAllowedLevels
+        self.categoryRules = categoryRules
+        self.metadataRedactionRules = metadataRedactionRules
+        self.messageRedactors = messageRedactors
         self.theme = theme
         self.formatting = formatting
         self.sinks = sinks ?? [
@@ -40,12 +53,18 @@ public struct LoggerConfiguration {
             DebugConsoleSink(supportsANSIColors: Self.isANSISupportedByEnvironment())
         ]
         self.includeSourceMetadata = includeSourceMetadata
+        self.clock = clock
+        self.randomNumberGenerator = randomNumberGenerator
+    }
+
+    public func whenEnabled(_ enabled: Bool) -> LoggerConfiguration {
+        var copy = self
+        copy.isEnabled = enabled
+        return copy
     }
 
     public func applyingBuildConfiguration<Provider: LoggerBuildConfigurationProviding>(_ provider: Provider.Type) -> LoggerConfiguration {
-        var copy = self
-        copy.isEnabled = provider.isLoggingEnabled
-        return copy
+        whenEnabled(provider.isLoggingEnabled)
     }
 
     public func applyingEnvironment(_ environment: [String: String]) -> LoggerConfiguration {
@@ -73,11 +92,13 @@ public struct LoggerConfiguration {
         if let ansiValue = environment["XCODELOGGER_ANSI"]?.lowercased() {
             let enableANSI = ansiValue == "1" || ansiValue == "true" || ansiValue == "yes"
             copy.sinks = copy.sinks.map { sink in
-                if sink is DebugConsoleSink {
-                    return DebugConsoleSink(supportsANSIColors: enableANSI) as LoggerSink
+                if let sink = sink as? DebugConsoleSink {
+                    sink.supportsANSIColors = enableANSI
+                    return sink
                 }
-                if sink is StdoutSink {
-                    return StdoutSink(supportsANSIColors: enableANSI) as LoggerSink
+                if let sink = sink as? StdoutSink {
+                    sink.supportsANSIColors = enableANSI
+                    return sink
                 }
                 return sink
             }
