@@ -1,19 +1,25 @@
 # XcodeLogger
 
-[![Version](https://img.shields.io/cocoapods/v/XcodeLogger.svg?style=flat)](http://cocoapods.org/pods/XcodeLogger)
-[![License](https://img.shields.io/cocoapods/l/XcodeLogger.svg?style=flat)](https://github.com/codeFi/XcodeLogger/blob/master/LICENSE)
-[![Platform](https://img.shields.io/cocoapods/p/XcodeLogger.svg?style=flat)](http://cocoapods.org/pods/XcodeLogger)
+Modern Apple-platform logging with:
 
-XcodeLogger is a Swift package for Apple-platform logging. The current implementation is centered on Unified Logging through `os.Logger`, with an optional ANSI-capable debug sink and a compatibility facade that preserves the old `XLog` / `DLog` family as category-based routing.
+- rich Xcode and Console.app output through `OSLogSink`
+- fully rendered terminal/stdout output through `StdoutSink`
+- customizable formatted debug output through `DebugConsoleSink`
+- a compatibility facade for the legacy `XLog` / `DLog` family
 
-The Swift package under `Sources/XcodeLogger` is the primary implementation. The legacy Objective-C sources remain in `XcodeLogger/Core` for compatibility and reference work, but the old scheme-driven sample apps are gone.
+`XcodeLogger` is now a Swift-first library distributed primarily through Swift Package Manager. The SwiftPM package serves only the source files under `Sources/XcodeLogger`. Demo apps and demo support code remain in `Examples`, but they are not package products.
 
-## Package
+## Highlights
 
-- Library product: `XcodeLogger`
-- SwiftPM ships only the library target under `Sources/XcodeLogger`
+- Unified logging via `os.Logger`
+- rich header formatting with file, line, function, timestamp, and metadata
+- category-aware and file-aware filtering
+- theme support for human-readable debug output
+- ANSI color support in real terminals
+- Xcode-aware stdout behavior: plain text in Xcode, ANSI in real terminals
+- compatibility routing for `XLog`, `DLog`, `DVLog`, `DDLog`, and `OLog`
 
-Supported package platforms:
+## Supported Platforms
 
 - iOS 17+
 - macOS 14+
@@ -23,7 +29,9 @@ Supported package platforms:
 
 ## Installation
 
-Add the package and depend on `XcodeLogger`.
+### Swift Package Manager
+
+Add the package from GitHub and depend on the `XcodeLogger` product.
 
 ```swift
 dependencies: [
@@ -47,7 +55,7 @@ import XcodeLogger
 let logger = Logger(configuration: LoggerConfiguration(
     subsystem: "com.example.app",
     minimumLevel: .information,
-    theme: .dracula
+    theme: .defaultDark
 ))
 
 logger.log(
@@ -58,9 +66,7 @@ logger.log(
 )
 ```
 
-## Core API
-
-Main types:
+## Core Types
 
 - `Logger`
 - `LoggerConfiguration`
@@ -76,21 +82,7 @@ Main types:
 - `StdoutSink`
 - `XcodeLogger`
 
-Built-in categories:
-
-- `default`
-- `debug`
-- `development`
-- `debug-development`
-- `online`
-
-Custom categories work the same way:
-
-```swift
-let payments = LoggerCategory(rawValue: "payments")
-```
-
-Levels:
+## Levels
 
 - `.simple`
 - `.simpleNoHeader`
@@ -99,7 +91,111 @@ Levels:
 - `.warning`
 - `.error`
 
-## Configuration
+## Categories
+
+Built-in categories:
+
+- `default`
+- `debug`
+- `development`
+- `debug-development`
+- `online`
+
+Custom categories:
+
+```swift
+let payments = LoggerCategory(rawValue: "payments")
+```
+
+## Basic Setup Patterns
+
+### 1. Xcode / Console.app focused logging
+
+Use `OSLogSink` when you want the best Xcode and Console.app experience.
+
+```swift
+import XcodeLogger
+
+let logger = Logger(configuration: LoggerConfiguration(
+    subsystem: "com.example.app",
+    sinks: [
+        OSLogSink(subsystem: "com.example.app")
+    ]
+))
+```
+
+### 2. Terminal / CLI focused logging
+
+Use `StdoutSink` when you want the fully rendered line on stdout.
+
+```swift
+import XcodeLogger
+
+let logger = Logger(configuration: LoggerConfiguration(
+    subsystem: "com.example.cli",
+    theme: .dracula,
+    sinks: [
+        StdoutSink()
+    ]
+))
+```
+
+Behavior:
+
+- in Terminal / iTerm, ANSI is enabled by default when supported
+- under Xcode, stdout defaults to plain text to avoid raw escape fragments
+
+### 3. Custom debug panel or in-app capture
+
+Use `DebugConsoleSink` when you want to intercept the fully rendered line yourself.
+
+```swift
+import XcodeLogger
+
+final class LogBuffer: @unchecked Sendable {
+    private let lock = NSLock()
+    private(set) var lines: [String] = []
+
+    func append(_ line: String) {
+        lock.lock()
+        lines.append(line)
+        lock.unlock()
+    }
+}
+
+let buffer = LogBuffer()
+
+let logger = Logger(configuration: LoggerConfiguration(
+    subsystem: "com.example.debug-panel",
+    theme: .dracula,
+    sinks: [
+        DebugConsoleSink(supportsANSIColors: false) { line in
+            buffer.append(line)
+        }
+    ]
+))
+```
+
+### 4. Combined production + debug sinks
+
+```swift
+import XcodeLogger
+
+let subsystem = "com.example.app"
+
+let logger = Logger(configuration: LoggerConfiguration(
+    subsystem: subsystem,
+    minimumLevel: .information,
+    theme: .defaultDark,
+    sinks: [
+        OSLogSink(subsystem: subsystem),
+        StdoutSink(),
+        DebugConsoleSink(supportsANSIColors: false)
+    ]
+))
+```
+
+## Configuration Guide
 
 `LoggerConfiguration` controls:
 
@@ -109,50 +205,115 @@ Levels:
 - global allowed-level overrides
 - file-based allowed-level overrides
 - theme selection
-- header and timestamp formatting
+- header tokens
+- timestamp format
+- line separators
 - sink selection
 
-Example:
+### Example: category thresholds + formatting
 
 ```swift
+import XcodeLogger
+
 let configuration = LoggerConfiguration(
     subsystem: "com.example.app",
     enabledCategories: [.debug, .online],
     minimumLevel: .information,
-    categoryLevels: [.debug: .simple],
+    categoryLevels: [
+        .debug: .simple,
+        .online: .warning
+    ],
     theme: .defaultDark,
     formatting: LoggerFormatting(
         timestampFormat: "HH:mm:ss.SSS",
-        headerTokens: [.literal("["), .category, .literal("] "), .timestamp, .literal(" "), .file, .literal(":"), .line],
+        headerTokens: [
+            .literal("["),
+            .label,
+            .literal("] "),
+            .timestamp,
+            .literal(" "),
+            .file,
+            .literal(":"),
+            .line,
+            .literal(" "),
+            .function
+        ],
         lineSeparatorAfterHeader: " ",
         lineSeparatorAfterMessage: "\n"
     )
 )
+
+let logger = Logger(configuration: configuration)
 ```
 
-Environment overrides are available through:
+### Example: file-based allowed-level override
+
+```swift
+import XcodeLogger
+
+var configuration = LoggerConfiguration(subsystem: "com.example.app")
+configuration.allowedLevelsByFile["PAYMENTSSERVICE.SWIFT"] = [.warning, .error]
+
+let logger = Logger(configuration: configuration)
+```
+
+### Example: metadata-rich events
+
+```swift
+import XcodeLogger
+
+let logger = Logger(configuration: LoggerConfiguration(subsystem: "com.example.app"))
+
+logger.log(
+    level: .information,
+    category: .debug,
+    message: "Request completed",
+    metadata: [
+        "requestID": "req-1001",
+        "region": "eu-central",
+        "status": "200"
+    ]
+)
+```
+
+## Environment Overrides
+
+`LoggerConfiguration.applyingEnvironment(_:)` supports:
 
 - `XCODELOGGER_LEVEL`
 - `XCODELOGGER_CATEGORIES`
 - `XCODELOGGER_ANSI`
 
-## Sinks And ANSI
+Example:
 
-`OSLogSink` writes into Apple’s Unified Logging system using a rich plain-text line, so Xcode and Console.app can show header information such as timestamp, file, line, and function without relying on ANSI escapes.
+```swift
+import XcodeLogger
 
-`DebugConsoleSink` writes the fully rendered line through a closure, optionally with ANSI color sequences.
+let configuration = LoggerConfiguration(subsystem: "com.example.app")
+    .applyingEnvironment(ProcessInfo.processInfo.environment)
 
-`StdoutSink` writes the fully rendered line to standard output. Its default behavior is environment-aware:
+let logger = Logger(configuration: configuration)
+```
 
-- in real terminals, ANSI is enabled when the environment supports it
-- under Xcode, ANSI is disabled by default so raw escape fragments are not printed
-- `XCODELOGGER_ANSI=true|false` can still explicitly override that behavior
+## Sink Behavior
 
-Practical behavior:
+### `OSLogSink`
 
-- `OSLogSink`: best for Xcode and Console.app
-- `StdoutSink`: best for Terminal / iTerm, but plain text under Xcode by default
-- `DebugConsoleSink`: best when you want complete control over where rendered output goes
+- writes a rich plain-text line into Apple’s Unified Logging system
+- best for Xcode and Console.app
+- does not rely on ANSI escapes
+
+### `StdoutSink`
+
+- writes the fully rendered line to standard output
+- uses ANSI in real terminals when supported
+- defaults to plain text under Xcode
+- respects `XCODELOGGER_ANSI`
+
+### `DebugConsoleSink`
+
+- writes the fully rendered line through a closure
+- ideal for custom panels, buffers, file capture, or test harnesses
 
 ## Compatibility Layer
 
@@ -168,43 +329,47 @@ Mappings:
 
 The Objective-C macro shim lives in [Compatibility/XcodeLogger.h](/Users/razvan/Documents/PROJECTS/XcodeLogger/Compatibility/XcodeLogger.h:1).
 
-## Demo Surfaces
+### Compatibility example
 
-The repo still contains demo surfaces in `Examples`, but they are not part of the SwiftPM package manifest and are not served as package products.
+```swift
+import XcodeLogger
 
-Available demos in the repository:
+XcodeLogger.shared.emitCompatibilityLog(
+    type: .debug,
+    level: .important,
+    file: #fileID,
+    function: #function,
+    line: #line,
+    message: "Legacy compatibility remains category-based"
+)
+```
+
+## Demos
+
+The repo contains demos in `Examples`, but they are not part of the SwiftPM package manifest.
+
+Available demo surfaces:
 
 - macOS app: `Examples/XcodeLoggerMacDemo.xcodeproj`
 - iOS app: `Examples/XcodeLoggeriOSDemo.xcodeproj`
 - terminal demo sources: `Examples/XcodeLoggerTerminalDemo`
-- shared demo support sources: `Examples/DemoSupport`
+- shared demo support code: `Examples/DemoSupport`
 
-Each demo exercises:
+The demos cover:
 
 - levels
 - categories
-- sinks
+- sink combinations
 - themes
 - filters
 - formatting
 - metadata
-- compatibility
-- ANSI on / off
+- compatibility routing
+- ANSI on / off behavior
 
-Sink coverage in the demos includes:
+### Verified demo builds
 
-- `OSLogSink`
-- `DebugConsoleSink`
-- `StdoutSink`
-- combined sink runs
-
-### macOS Demo
-
-Project:
-
-- `Examples/XcodeLoggerMacDemo.xcodeproj`
-
-Verified build command:
+macOS:
 
 ```bash
 xcodebuild -project Examples/XcodeLoggerMacDemo.xcodeproj \
@@ -216,20 +381,7 @@ xcodebuild -project Examples/XcodeLoggerMacDemo.xcodeproj \
   build
 ```
 
-The macOS app provides:
-
-- scenario sidebar
-- theme / level / category / ANSI / sink controls
-- run and run-all actions
-- in-app captured debug output panel
-
-### iOS Demo
-
-Project:
-
-- `Examples/XcodeLoggeriOSDemo.xcodeproj`
-
-Verified build command:
+iOS:
 
 ```bash
 xcodebuild -project Examples/XcodeLoggeriOSDemo.xcodeproj \
@@ -241,13 +393,6 @@ xcodebuild -project Examples/XcodeLoggeriOSDemo.xcodeproj \
   build
 ```
 
-The iOS app provides:
-
-- scenario selection
-- theme / level / category / ANSI / sink controls
-- run and run-all actions
-- in-app captured debug output view
-
 ## Verification
 
 Library tests:
@@ -256,7 +401,7 @@ Library tests:
 swift test
 ```
 
-This repository was verified against:
+This repository has been verified with:
 
 - `swift test`
 - macOS demo build via `xcodebuild`
