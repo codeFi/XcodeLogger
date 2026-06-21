@@ -2,6 +2,7 @@ import Foundation
 
 public struct LoggerConfiguration {
     public var subsystem: String
+    public var isEnabled: Bool
     public var enabledCategories: Set<LoggerCategory>?
     public var minimumLevel: LoggerLevel
     public var categoryLevels: [LoggerCategory: LoggerLevel]
@@ -14,6 +15,7 @@ public struct LoggerConfiguration {
 
     public init(
         subsystem: String,
+        isEnabled: Bool = true,
         enabledCategories: Set<LoggerCategory>? = nil,
         minimumLevel: LoggerLevel = .simple,
         categoryLevels: [LoggerCategory: LoggerLevel] = [:],
@@ -25,6 +27,7 @@ public struct LoggerConfiguration {
         includeSourceMetadata: Bool = true
     ) {
         self.subsystem = subsystem
+        self.isEnabled = isEnabled
         self.enabledCategories = enabledCategories
         self.minimumLevel = minimumLevel
         self.categoryLevels = categoryLevels
@@ -37,6 +40,12 @@ public struct LoggerConfiguration {
             DebugConsoleSink(supportsANSIColors: Self.isANSISupportedByEnvironment())
         ]
         self.includeSourceMetadata = includeSourceMetadata
+    }
+
+    public func applyingBuildConfiguration<Provider: LoggerBuildConfigurationProviding>(_ provider: Provider.Type) -> LoggerConfiguration {
+        var copy = self
+        copy.isEnabled = provider.isLoggingEnabled
+        return copy
     }
 
     public func applyingEnvironment(_ environment: [String: String]) -> LoggerConfiguration {

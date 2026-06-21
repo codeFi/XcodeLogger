@@ -2,6 +2,33 @@ import XCTest
 @testable import XcodeLogger
 
 final class XcodeLoggerTests: XCTestCase {
+    func testDisabledConfigurationSuppressesAllOutput() {
+        let sink = RecordingSink()
+        let logger = Logger(configuration: LoggerConfiguration(
+            subsystem: "test",
+            isEnabled: false,
+            sinks: [sink]
+        ))
+
+        logger.log(level: .error, category: .default, message: "ignored")
+
+        XCTAssertTrue(sink.messages.isEmpty)
+    }
+
+    func testBuildConfigurationProviderCanDisableLogging() {
+        let sink = RecordingSink()
+        let configuration = LoggerConfiguration(
+            subsystem: "test",
+            sinks: [sink]
+        ).applyingBuildConfiguration(DisabledBuildConfiguration.self)
+        let logger = Logger(configuration: configuration)
+
+        logger.log(level: .error, category: .default, message: "ignored")
+
+        XCTAssertFalse(configuration.isEnabled)
+        XCTAssertTrue(sink.messages.isEmpty)
+    }
+
     func testMinimumLevelFiltering() {
         let sink = RecordingSink()
         let logger = Logger(configuration: LoggerConfiguration(
@@ -59,9 +86,9 @@ final class XcodeLoggerTests: XCTestCase {
             sinks: [sink]
         ))
 
-        logger.log(level: .important, category: .online, message: "body", source: LogSource(file: "File.swift", function: "demo()", line: 42))
+        logger.log(level: .important, category: .networking, message: "body", source: LogSource(file: "File.swift", function: "demo()", line: 42))
 
-        XCTAssertEqual(sink.messages.first, "<online>42 body")
+        XCTAssertEqual(sink.messages.first, "<networking>42 body")
     }
 
     func testThemeResolutionAndANSIFormatting() {
@@ -147,12 +174,12 @@ final class XcodeLoggerTests: XCTestCase {
         let sink = RecordingSink()
         let configuration = LoggerConfiguration(subsystem: "test", sinks: [sink]).applyingEnvironment([
             "XCODELOGGER_LEVEL": "warning",
-            "XCODELOGGER_CATEGORIES": "debug,online",
+            "XCODELOGGER_CATEGORIES": "debug,networking",
             "XCODELOGGER_ANSI": "false"
         ])
 
         XCTAssertEqual(configuration.minimumLevel, .warning)
-        XCTAssertEqual(configuration.enabledCategories, [.debug, .online])
+        XCTAssertEqual(configuration.enabledCategories, [.debug, .networking])
         let debugSink = try? XCTUnwrap(configuration.sinks.first as? RecordingSink)
         XCTAssertEqual(debugSink?.supportsANSIColors, false)
     }
@@ -229,4 +256,8 @@ private final class LockedStringBuffer: @unchecked Sendable {
         values.append(value)
         lock.unlock()
     }
+}
+
+private enum DisabledBuildConfiguration: LoggerBuildConfigurationProviding {
+    static let isLoggingEnabled = false
 }

@@ -622,10 +622,10 @@ static NSMutableDictionary *XL_FILTERS_DICTIONARY;
                                                 withLevel:paramLogLevel];
     XLogObject *DDLog = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_DEBUG_DEVELOPMENT
                                                 withLevel:paramLogLevel];
-    XLogObject *OLog  = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_ONLINE_SERVICES
+    XLogObject *NLog  = [XcodeLogger getXLogObjectForType:XLOGGER_TYPE_ONLINE_SERVICES
                                                 withLevel:paramLogLevel];
     
-    NSArray *logTypes = @[XLog, DLog, DVLog, DDLog, OLog];
+    NSArray *logTypes = @[XLog, DLog, DVLog, DDLog, NLog];
     return logTypes;
 }
 
@@ -856,4 +856,3 @@ void  func_XLog_Output(XLOGGER_TYPE  paramLogType,
         }
     }
 }
-

@@ -59,6 +59,10 @@ public final class Logger: @unchecked Sendable {
 
 extension Logger {
     private func shouldLog(event: LogEvent, configuration: LoggerConfiguration) -> Bool {
+        if !configuration.isEnabled {
+            return false
+        }
+
         if let enabledCategories = configuration.enabledCategories, !enabledCategories.contains(event.category) {
             return false
         }

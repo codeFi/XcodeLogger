@@ -15,7 +15,7 @@ public struct LoggerCategory: Hashable, RawRepresentable, ExpressibleByStringLit
     public static let debug: LoggerCategory = "debug"
     public static let development: LoggerCategory = "development"
     public static let debugDevelopment: LoggerCategory = "debug-development"
-    public static let online: LoggerCategory = "online"
+    public static let networking: LoggerCategory = "networking"
 }
 
 extension LoggerCategory {
@@ -30,7 +30,7 @@ extension LoggerCategory {
         case .debugDevelopment:
             self = .debugDevelopment
         case .onlineServices:
-            self = .online
+            self = .networking
         case .all:
             self = .default
         }

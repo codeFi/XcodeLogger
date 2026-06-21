@@ -137,7 +137,7 @@ public enum DemoScenarioCatalog {
         .init(id: .filters, title: "Filters", summary: "Demonstrate global, per-category, enabled-category, and allowed-level filtering."),
         .init(id: .formatting, title: "Formatting", summary: "Show header tokens, timestamp format changes, and newline behavior."),
         .init(id: .metadata, title: "Metadata", summary: "Emit event metadata and explain the structured `OSLogSink` effect."),
-        .init(id: .compatibility, title: "Compatibility", summary: "Route `XLog`/`DLog`/`DVLog`/`DDLog`/`OLog` through the compatibility facade."),
+        .init(id: .compatibility, title: "Compatibility", summary: "Route `XLog`/`DLog`/`DVLog`/`DDLog`/`NLog` through the compatibility facade."),
         .init(id: .ansiOn, title: "ANSI On", summary: "Force ANSI-capable debug output for terminals that honor escapes."),
         .init(id: .ansiOff, title: "ANSI Off", summary: "Force plain-text fallback without ANSI escape codes."),
         .init(id: .runAll, title: "Run All", summary: "Run every scenario in sequence.")
@@ -156,7 +156,7 @@ public enum DemoScenarioCatalog {
         .debug,
         .development,
         .debugDevelopment,
-        .online,
+        .networking,
         payments
     ]
 }

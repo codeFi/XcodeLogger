@@ -364,7 +364,7 @@ extension DemoRunner {
             (.debug, "Debug category event"),
             (.development, "Development category event"),
             (.debugDevelopment, "Debug-development category event"),
-            (.online, "Online category event"),
+            (.networking, "Networking category event"),
             (DemoScenarioCatalog.payments, "Custom payments category event")
         ]
 
@@ -380,7 +380,7 @@ extension DemoRunner {
 
     private func emitTheme(using configuration: LoggerConfiguration) {
         let logger = Logger(configuration: configuration)
-        logger.log(level: .warning, category: .online, message: "Theme palette preview", metadata: ["theme": configuration.theme.name], source: DemoScenarioCatalog.syntheticSource)
+        logger.log(level: .warning, category: .networking, message: "Theme palette preview", metadata: ["theme": configuration.theme.name], source: DemoScenarioCatalog.syntheticSource)
         logger.log(level: .error, category: DemoScenarioCatalog.payments, message: "Theme contrast check", metadata: ["theme": configuration.theme.name], source: DemoScenarioCatalog.syntheticSource)
     }
 
@@ -396,7 +396,7 @@ extension DemoRunner {
             logger.log(level: .information, category: DemoScenarioCatalog.payments, message: "Visible because `payments` is lowered to `.information`", source: DemoScenarioCatalog.syntheticSource)
         case "Enabled Categories":
             logger = Logger(configuration: configuration)
-            logger.log(level: .information, category: .online, message: "Hidden because `online` is disabled", source: DemoScenarioCatalog.syntheticSource)
+            logger.log(level: .information, category: .networking, message: "Hidden because `networking` is disabled", source: DemoScenarioCatalog.syntheticSource)
             logger.log(level: .information, category: DemoScenarioCatalog.payments, message: "Visible because `payments` remains enabled", source: DemoScenarioCatalog.syntheticSource)
         case "Allowed Levels Override":
             configuration.globalAllowedLevels = [.information]
@@ -457,7 +457,7 @@ extension DemoRunner {
         let logger = Logger(configuration: configuration)
         logger.log(
             level: .information,
-            category: .online,
+            category: .networking,
             message: "Metadata is attached to this event",
             metadata: [
                 "requestID": "req-1001",
@@ -478,7 +478,7 @@ extension DemoRunner {
             ("DLog", .debug),
             ("DVLog", .development),
             ("DDLog", .debugDevelopment),
-            ("OLog", .onlineServices)
+            ("NLog", .onlineServices)
         ]
 
         for (macro, type) in entries {
@@ -531,7 +531,7 @@ extension DemoRunner {
         case .debugDevelopment:
             return LoggerCategory.debugDevelopment.rawValue
         case .onlineServices:
-            return LoggerCategory.online.rawValue
+            return LoggerCategory.networking.rawValue
         case .all:
             return LoggerCategory.default.rawValue
         }
