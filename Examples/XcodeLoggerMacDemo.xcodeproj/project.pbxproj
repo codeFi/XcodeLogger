@@ -1,0 +1,275 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* XcodeLoggerMacDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* XcodeLoggerMacDemoApp.swift */; };
+		A10000000000000000000002 /* DemoRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* DemoRootView.swift */; };
+		A10000000000000000000003 /* DemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000013 /* DemoViewModel.swift */; };
+		A10000000000000000000004 /* DemoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000014 /* DemoCapture.swift */; };
+		A10000000000000000000005 /* DemoScenarios.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* DemoScenarios.swift */; };
+		A10000000000000000000006 /* DemoRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000016 /* DemoRunner.swift */; };
+		A10000000000000000000007 /* XcodeLogger in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000030 /* XcodeLogger */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A10000000000000000000010 /* XcodeLoggerMacDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XcodeLoggerMacDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000011 /* XcodeLoggerMacDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeLoggerMacDemoApp.swift; sourceTree = "<group>"; };
+		A10000000000000000000012 /* DemoRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoRootView.swift; sourceTree = "<group>"; };
+		A10000000000000000000013 /* DemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewModel.swift; sourceTree = "<group>"; };
+		A10000000000000000000014 /* DemoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCapture.swift; sourceTree = "<group>"; };
+		A10000000000000000000015 /* DemoScenarios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoScenarios.swift; sourceTree = "<group>"; };
+		A10000000000000000000016 /* DemoRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoRunner.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A10000000000000000000021 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000007 /* XcodeLogger in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A10000000000000000000040 = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000041 /* XcodeLoggerMacDemo */,
+				A10000000000000000000042 /* AppDemoShared */,
+				A10000000000000000000043 /* DemoSupport */,
+				A10000000000000000000044 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A10000000000000000000041 /* XcodeLoggerMacDemo */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000011 /* XcodeLoggerMacDemoApp.swift */,
+			);
+			path = XcodeLoggerMacDemo;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000042 /* AppDemoShared */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000012 /* DemoRootView.swift */,
+				A10000000000000000000013 /* DemoViewModel.swift */,
+			);
+			path = AppDemoShared;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000043 /* DemoSupport */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000014 /* DemoCapture.swift */,
+				A10000000000000000000015 /* DemoScenarios.swift */,
+				A10000000000000000000016 /* DemoRunner.swift */,
+			);
+			path = DemoSupport;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000044 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000010 /* XcodeLoggerMacDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A10000000000000000000020 /* XcodeLoggerMacDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000000052 /* Build configuration list for PBXNativeTarget "XcodeLoggerMacDemo" */;
+			buildPhases = (
+				A10000000000000000000022 /* Sources */,
+				A10000000000000000000021 /* Frameworks */,
+				A10000000000000000000023 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = XcodeLoggerMacDemo;
+			packageProductDependencies = (
+				A10000000000000000000030 /* XcodeLogger */,
+			);
+			productName = XcodeLoggerMacDemo;
+			productReference = A10000000000000000000010 /* XcodeLoggerMacDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000000050 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 2650;
+				TargetAttributes = {
+					A10000000000000000000020 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+				};
+			};
+			buildConfigurationList = A10000000000000000000051 /* Build configuration list for PBXProject "XcodeLoggerMacDemo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A10000000000000000000040;
+			packageReferences = (
+				A10000000000000000000031 /* XCLocalSwiftPackageReference ".." */,
+			);
+			productRefGroup = A10000000000000000000044 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A10000000000000000000020 /* XcodeLoggerMacDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A10000000000000000000023 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A10000000000000000000022 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* XcodeLoggerMacDemoApp.swift in Sources */,
+				A10000000000000000000002 /* DemoRootView.swift in Sources */,
+				A10000000000000000000003 /* DemoViewModel.swift in Sources */,
+				A10000000000000000000004 /* DemoCapture.swift in Sources */,
+				A10000000000000000000005 /* DemoScenarios.swift in Sources */,
+				A10000000000000000000006 /* DemoRunner.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A10000000000000000000060 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A10000000000000000000061 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A10000000000000000000062 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "XcodeLogger Mac Demo";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefi.XcodeLoggerMacDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A10000000000000000000063 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "XcodeLogger Mac Demo";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefi.XcodeLoggerMacDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A10000000000000000000051 /* Build configuration list for PBXProject "XcodeLoggerMacDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000060 /* Debug */,
+				A10000000000000000000061 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000052 /* Build configuration list for PBXNativeTarget "XcodeLoggerMacDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000062 /* Debug */,
+				A10000000000000000000063 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A10000000000000000000031 /* XCLocalSwiftPackageReference ".." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A10000000000000000000030 /* XcodeLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000031 /* XCLocalSwiftPackageReference ".." */;
+			productName = XcodeLogger;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A10000000000000000000050 /* Project object */;
+}
