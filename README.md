@@ -99,6 +99,173 @@ logger.log(
 )
 ```
 
+## 2.2 Usage Guide
+
+The new 2.2 features are meant to compose:
+
+- create scoped child loggers once, then reuse them
+- keep caller-side logging cheap by making non-interactive sinks asynchronous
+- apply redaction globally so every sink receives the same sanitized event
+- use per-sink policy to keep each output useful instead of forcing one global threshold
+
+### Example: scoped child loggers
+
+Use child loggers when a subsystem, category, or metadata set repeats across a workflow.
+
+```swift
+let paymentsLogger = logger
+    .scoped(subsystem: "com.example.app.payments")
+    .category("payments")
+    .scoped(metadata: [
+        "flow": "checkout",
+        "screen": "payment-sheet"
+    ])
+
+paymentsLogger.log(
+    level: .information,
+    message: "Starting authorization",
+    metadata: ["requestID": "req-42"]
+)
+
+paymentsLogger.log(
+    level: .error,
+    message: "Authorization failed",
+    metadata: ["requestID": "req-42", "attempt": "2"]
+)
+```
+
+Guidelines:
+
+- prefer child loggers for stable context like feature area, flow, or subsystem
+- use per-call metadata for short-lived values like request IDs or retry counts
+- later scopes override earlier metadata for the same key
+
+### Example: build enablement with `whenEnabled(_:)`
+
+Use `whenEnabled(_:)` when you already know the final compile-time decision and do not need a provider type.
+
+```swift
+let configuration = LoggerConfiguration(subsystem: "com.example.app")
+    .whenEnabled({
+        #if DEBUG
+        true
+        #else
+        false
+        #endif
+    }())
+```
+
+### Example: redaction
+
+Redaction runs before any sink renders output.
+
+```swift
+let configuration = LoggerConfiguration(
+    subsystem: "com.example.app",
+    metadataRedactionRules: [
+        LoggerMetadataRedactionRule(key: "token"),
+        LoggerMetadataRedactionRule(key: "email", replacement: "<redacted-email>")
+    ],
+    messageRedactors: [
+        LoggerMessageRedactor { message in
+            message.replacingOccurrences(of: "4111 1111 1111 1111", with: "<card>")
+        }
+    ]
+)
+```
+
+Guidelines:
+
+- redact by metadata key for stable fields like `token`, `email`, or `sessionID`
+- use message redactors for free-form strings coming from APIs or user input
+- treat redaction as global policy, not sink-specific formatting
+
+### Example: per-sink policy
+
+Different sinks usually need different noise levels.
+
+```swift
+let consoleSink = DebugConsoleSink(
+    policy: LoggerSinkPolicy(
+        minimumLevel: .information,
+        categoryRules: [
+            LoggerCategoryRule(pattern: "^network", mode: .allow),
+            LoggerCategoryRule(pattern: "verbose", mode: .deny)
+        ]
+    )
+)
+
+let fileSink = FileSink(
+    fileURL: URL(fileURLWithPath: "/tmp/app.log"),
+    maximumFileSizeInBytes: 512_000,
+    maximumArchiveCount: 3,
+    policy: LoggerSinkPolicy(
+        minimumLevel: .simple,
+        allowedLevelsByFile: [
+            "PAYMENTSSERVICE.SWIFT": [.warning, .error]
+        ]
+    )
+)
+```
+
+Guidelines:
+
+- use stricter console policies so developers only see actionable output
+- keep file sinks broader when they serve post-failure diagnosis
+- invalid regex rules are ignored, so validate patterns in tests if they matter
+
+### Example: sampling and rate limiting
+
+Use sink policy to suppress very noisy categories without disabling them globally.
+
+```swift
+let sink = DebugConsoleSink(
+    policy: LoggerSinkPolicy(
+        samplingRules: [
+            LoggerSamplingRule(category: .debug, probability: 0.2)
+        ],
+        rateLimitRules: [
+            LoggerRateLimitRule(category: .networking, maximumEvents: 20, window: 60)
+        ]
+    )
+)
+```
+
+Guidelines:
+
+- use sampling for high-volume debug traces where representative coverage is enough
+- use rate limiting for bursty operational categories like networking or retries
+- suppressed events are dropped silently in 2.2, so avoid aggressive policies for critical categories
+
+### Example: async delivery and file rotation
+
+Async delivery is opt-in per sink. It is the default choice for sinks that touch the filesystem.
+
+```swift
+let fileSink = FileSink(
+    fileURL: URL(fileURLWithPath: "/var/tmp/example.log"),
+    maximumFileSizeInBytes: 1_048_576,
+    maximumArchiveCount: 5,
+    append: true,
+    deliveryMode: .asynchronous(batchSize: 16)
+)
+
+let logger = Logger(configuration: LoggerConfiguration(
+    subsystem: "com.example.app",
+    sinks: [
+        OSLogSink(subsystem: "com.example.app"),
+        fileSink
+    ]
+))
+```
+
+Guidelines:
+
+- keep `OSLogSink` synchronous for immediate system integration
+- prefer async delivery for file or custom sinks that may block
+- start with small batch sizes like `8` or `16` unless you have measured a need for more
+- rotation archives use stable numbered suffixes such as `example.1.log`
+
 ## Build Configuration Control
 
 If you want no log output for some builds, define that in your app target, not in `XcodeLogger`.
@@ -245,6 +412,46 @@ let logger = Logger(configuration: LoggerConfiguration(
         }
     ]
 ))
+```
+
+### `FileSink`
+
+Use this for persistent local capture with size-based rotation.
+
+```swift
+let logger = Logger(configuration: LoggerConfiguration(
+    subsystem: "com.example.app",
+    sinks: [
+        FileSink(
+            fileURL: URL(fileURLWithPath: "/tmp/example.log"),
+            maximumFileSizeInBytes: 512_000,
+            maximumArchiveCount: 3
+        )
+    ]
+))
+```
+
+Behavior:
+
+- writes append by default
+- file delivery is intended to be asynchronous
+- archives rotate to numbered siblings like `example.1.log`, `example.2.log`
+
+### `TestSink`
+
+Use this in your own tests instead of building an ad hoc sink for every suite.
+
+```swift
+let sink = TestSink()
+let logger = Logger(configuration: LoggerConfiguration(
+    subsystem: "com.example.tests",
+    sinks: [sink]
+))
+
+logger.log(level: .warning, category: .networking, message: "captured")
+
+XCTAssertEqual(sink.events.first?.category, .networking)
+XCTAssertTrue(sink.renderedMessages.first?.contains("captured") == true)
 ```
 
 ## Levels
