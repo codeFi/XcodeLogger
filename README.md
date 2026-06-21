@@ -327,7 +327,7 @@ Mappings:
 - `DDLog` -> `debug-development`
 - `OLog` -> `online`
 
-The Objective-C macro shim lives in [Compatibility/XcodeLogger.h](/Users/razvan/Documents/PROJECTS/XcodeLogger/Compatibility/XcodeLogger.h:1).
+The Objective-C macro shim lives in [Compatibility/XcodeLogger.h](Compatibility/XcodeLogger.h).
 
 ### Compatibility example
 
