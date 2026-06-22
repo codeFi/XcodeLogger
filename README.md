@@ -289,7 +289,7 @@ Create an app-owned file such as `AppLogBuildConfiguration.swift`:
 import XcodeLogger
 
 enum AppLogBuildConfiguration: LoggerBuildConfigurationProviding {
-    static let isLoggingEnabled: Bool = {
+    static var isLoggingEnabled: Bool = {
         #if DEBUG
         true
         #elseif STAGING
@@ -297,7 +297,7 @@ enum AppLogBuildConfiguration: LoggerBuildConfigurationProviding {
         #else
         false
         #endif
-    }()
+    }
 }
 ```
 
